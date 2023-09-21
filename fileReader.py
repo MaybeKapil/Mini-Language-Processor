@@ -20,14 +20,14 @@ class fileReader:
 
     # Returns a string containing the character that was just read
     def current_char():
-        return "Hi"
+        return "fix_me"
 
     # Returns a string containing the line and column integers separated by a colon character.
     def position():
         return currentLine +  ":" + currentColumn;
 
     def main():
-        print("Hello World!")
+        print("fix_me")
 
     if __name__ == "__main__":
         main()
