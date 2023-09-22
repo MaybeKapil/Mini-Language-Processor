@@ -1,19 +1,22 @@
 # Import the 'isfile' function from the 'os.path' submodule.
 import os.path
 
+# Import the 'stderr' attribute from the 'sys' module to handle error output.
+import sys
+
 # Global Variables
 
 # The current character being processed.
 current_char = ''
 
 # The current character's line number.
-current_line = 0
+current_line = 1
 
 # The current character's column number.
 current_column = 0
 
 # The file to be read.
-file = None
+input_file = None
 
 class fileReader:
     # Reads the next character from the input file and updates character and position values accordingly.
