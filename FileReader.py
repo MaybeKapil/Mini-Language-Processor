@@ -63,8 +63,18 @@ class fileReader:
     def open_file(some_file):
         file = open(some_file, 'r')
 
-    def main():
-        print("fix_me")
+    # Prompt the user for a valid file name and open the file to for reading.
+    open_file(get_file_name)
 
-    if __name__ == "__main__":
-        main()
+    # Read the first character from the file.
+    next_char()
+
+    # Loop until end-of-text character is reached.
+    # File is assumed to contain Unix-style line ending, not CRLF.
+    # In ASCII and Unicode character encodings, LF is represented as '\n'.
+    while(current_char != '\n'):
+        # Print the position of the current character followed by the character.
+        print(position() + " " + current_char)
+
+        # Call the next_char function to read the next character from the file.
+        next_char()
