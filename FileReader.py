@@ -49,6 +49,11 @@ class fileReader:
 
         return file_name
 
+    # Opens the file specified by the 'some_file' argument in read-only mode ('r').
+    # Does not return a value.
+    def open_file(some_file):
+        file = open(some_file, 'r')
+
     def main():
         print("fix_me")
 
