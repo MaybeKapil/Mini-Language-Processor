@@ -38,9 +38,10 @@ class fileReader:
     def get_current_char():
         return current_char
 
-    # Returns a string containing the line and column integers separated by a colon character.
+    # Returns a string representation of the current position in the format "line:column".
     def position():
-        pos  = current_line +  ":" + current_column
+        # Concatenate the current line and column integers with a colon separator.
+        pos = f"{current_line}:{current_column}"
         return pos
 
     # Prompt the user to enter a valid file name.
