@@ -12,6 +12,9 @@ current_line = 0
 # Holds the current character's column number
 current_column = 0
 
+# The file to be read.
+file = None
+
 class fileReader:
 
     # Reads the next character from the input file and updates character and position values accordingly.
