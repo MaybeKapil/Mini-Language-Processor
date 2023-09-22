@@ -14,13 +14,22 @@ current_column = 0
 
 class fileReader:
 
-    # Reads the next character in the input file. Does not return anything.
-    # Will cause the next character to be stored in memory.
+    # Reads the next character from the input file and updates character and position values accordingly.
+    # Does not return a value.
     def next_char():
+        # Ensures reference to global variables, not variables of local scope.
         global current_char, current_line, current_column
-        current_char = 'a'
-        current_line += 1
-        current_column += 1
+
+        # Reads one character from the file.
+        current_char = file.read(1)
+
+        # Check if a new line character was read.
+        if (current_char == "\n"):
+            # If a new line character is encountered, increment the current_line count.
+            current_line += 1
+
+            # Reset the current_column count to 0 for a new line.
+            current_column = 0
 
     # Returns a string containing the character that was just read
     def get_current_char():
