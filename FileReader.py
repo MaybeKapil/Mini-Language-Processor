@@ -3,20 +3,19 @@ import os.path
 
 # Global Variables
 
-# Holds the current character
+# The current character being processed.
 current_char = ''
 
-# Holds the current character's line number
+# The current character's line number.
 current_line = 0
 
-# Holds the current character's column number
+# The current character's column number.
 current_column = 0
 
 # The file to be read.
 file = None
 
 class fileReader:
-
     # Reads the next character from the input file and updates character and position values accordingly.
     # Does not return a value.
     def next_char():
@@ -34,7 +33,7 @@ class fileReader:
             # Reset the current_column count to 0 for a new line.
             current_column = 0
 
-    # Returns a string containing the character that was just read
+    # Returns a string containing the character that was just read.
     def get_current_char():
         return current_char
 
@@ -43,6 +42,7 @@ class fileReader:
         # Concatenate the current line and column integers with a colon separator.
         pos = f"{current_line}:{current_column}"
         return pos
+
 
     # Prompt the user to enter a valid file name.
     # Returns the valid file name entered by the user.
@@ -66,6 +66,8 @@ class fileReader:
     # Does not return a value.
     def open_file(some_file):
         file = open(some_file, 'r')
+
+    # End of function definition.
 
     # Prompt the user for a valid file name and open the file to for reading.
     open_file(get_file_name)
