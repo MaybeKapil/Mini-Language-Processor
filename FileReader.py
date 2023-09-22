@@ -26,15 +26,25 @@ class fileReader:
         global current_char, current_line, current_column
 
         # Reads one character from the file.
-        current_char = file.read(1)
+        current_char = input_file.read(1)
 
-        # Check if a new line character was read.
+        # File is assumed to contain Unix-style line ending, not CRLF.
+        # In ASCII and Unicode character encodings, LF is represented as '\n'.
+        # Check if you reached a Line-Feed, '\n'
         if (current_char == "\n"):
-            # If a new line character is encountered, increment the current_line count.
+            # Increment the current_line count.
             current_line += 1
 
             # Reset the current_column count to 0 for a new line.
             current_column = 0
+
+            # # When you reach a Line-Feed, '\n' , consider that as an empty character
+            # current_char = ''
+        else:
+            # If you just read a character that is not a Line-Feed, then you are on the same line
+            # so increment the column value without incrementing the line value
+            # and the character value will be the same as what was read
+            current_column += 1
 
     # Returns a string containing the character that was just read.
     def get_current_char():
