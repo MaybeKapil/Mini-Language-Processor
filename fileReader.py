@@ -22,11 +22,12 @@ class fileReader:
 
     # Returns a string containing the character that was just read
     def get_current_char():
-        return "fix_me"
+        return current_char
 
     # Returns a string containing the line and column integers separated by a colon character.
     def position():
-        return currentLine +  ":" + currentColumn;
+        pos  = current_line +  ":" + current_column
+        return pos
     
     def main():
         print("fix_me")
