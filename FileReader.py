@@ -68,7 +68,7 @@ class fileReader:
             # Verify if the user input corresponds to a valid file.
             # If the input is invalid, prompt the user again for a valid file name until a valid file name is obtained.
             if (os.path.isfile(path) == False):
-                print("Invalid file. Please enter a valid file name: ")
+                print("Invalid file. Please try again.\n")
                 continue
             else:
                 break
