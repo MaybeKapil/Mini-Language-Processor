@@ -102,11 +102,21 @@ class fileReader:
     next_char()
 
     # Loop until end-of-text character is reached.
-    # File is assumed to contain Unix-style line ending, not CRLF.
-    # In ASCII and Unicode character encodings, LF is represented as '\n'.
-    while(current_char != '\n'):
+    # This is done by looping until the value of the 'current_char' variable, which is obtained by using get_current_char(), is empty.
+    # An empty value indicates that End of File has been reached.
+    while(get_current_char()):
         # Print the position of the current character followed by the character.
-        print(position() + " " + current_char)
+        print(position() + " ", end="")
+
+        # Check if the current character is a LF character ('\n')
+        # If it is an LF character, print an empty line to represent the LF character as an empty string.
+        if (get_current_char() == '\n'):
+            print()
+        # If it isn't an LF character, print the current character.
+        else:
+            print(get_current_char())
 
         # Call the next_char function to read the next character from the file.
         next_char()
+
+    input_file.close
