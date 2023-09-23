@@ -121,5 +121,7 @@ class FileReader:
             # Call the next_char function to read the next character from the file.
             self.next_char()
 
+        print("Reading and displaying the input file has been completed")
+
         # Close file after reading is complete.
         input_file.close
