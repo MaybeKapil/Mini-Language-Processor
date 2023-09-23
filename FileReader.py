@@ -18,10 +18,10 @@ current_column = 0
 # The file to be read.
 input_file = None
 
-class fileReader:
+class FileReader:
     # Reads the next character from the input file and updates character and position values accordingly.
     # Does not return a value.
-    def next_char():
+    def next_char(self):
         # Ensures reference to global variables, not variables of local scope.
         global current_char, current_line, current_column
 
@@ -47,11 +47,11 @@ class fileReader:
             current_column += 1
 
     # Returns a string containing the character that was just read.
-    def get_current_char():
+    def get_current_char(self):
         return current_char
 
     # Returns a string representation of the current position in the format "line:column".
-    def position():
+    def position(self):
         # Concatenate the current line and column integers with a colon separator.
         pos = f"{current_line}:{current_column}"
         return pos
@@ -59,7 +59,7 @@ class fileReader:
 
     # Prompt the user to enter a valid file name.
     # Returns the valid file name entered by the user.
-    def get_file_name():
+    def get_file_name(self):
         while(True):
             # Assume the file is in the same directory as the executable reader.
             file_name = input("Enter the file name: ")
@@ -78,7 +78,7 @@ class fileReader:
     # Opens the file specified by the 'some_file' argument in read-only mode ('r').
     # Does not return a value.
     # Used this webpage for help on how to error handle: https://www.topbug.net/blog/2020/10/03/catching-filenotfounderror-watch-out/
-    def open_file(some_file):
+    def open_file(self, some_file):
         global input_file
 
         try:
