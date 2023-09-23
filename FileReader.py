@@ -96,7 +96,7 @@ class fileReader:
     # End of function definition.
 
     # Prompt the user for a valid file name and open the file to for reading.
-    open_file(get_file_name)
+    open_file(get_file_name())
 
     # Read the first character from the file.
     next_char()
