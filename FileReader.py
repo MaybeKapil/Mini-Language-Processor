@@ -95,28 +95,31 @@ class FileReader:
 
     # End of function definition.
 
-    # Prompt the user for a valid file name and open the file to for reading.
-    open_file(get_file_name())
+    def read_file(self):
 
-    # Read the first character from the file.
-    next_char()
+        # Prompt the user for a valid file name and open the file to for reading.
+        self.open_file(self.get_file_name())
 
-    # Loop until end-of-text character is reached.
-    # This is done by looping until the value of the 'current_char' variable, which is obtained by using get_current_char(), is empty.
-    # An empty value indicates that End of File has been reached.
-    while(get_current_char()):
-        # Print the position of the current character followed by the character.
-        print(position() + " ", end="")
+        # Read the first character from the file.
+        self.next_char()
 
-        # Check if the current character is a LF character ('\n')
-        # If it is an LF character, print an empty line to represent the LF character as an empty string.
-        if (get_current_char() == '\n'):
-            print()
-        # If it isn't an LF character, print the current character.
-        else:
-            print(get_current_char())
+        # Loop until end-of-text character is reached.
+        # This is done by looping until the value of the 'current_char' variable, which is obtained by using get_current_char(), is empty.
+        # An empty value indicates that End of File has been reached.
+        while(self.get_current_char()):
+            # Print the position of the current character followed by the character.
+            print(self.position() + " ", end="")
 
-        # Call the next_char function to read the next character from the file.
-        next_char()
+            # Check if the current character is a LF character ('\n')
+            # If it is an LF character, print an empty line to represent the LF character as an empty string.
+            if (self.get_current_char() == '\n'):
+                print()
+            # If it isn't an LF character, print the current character.
+            else:
+                print(self.get_current_char())
 
-    input_file.close
+            # Call the next_char function to read the next character from the file.
+            self.next_char()
+
+        # Close file after reading is complete.
+        input_file.close
