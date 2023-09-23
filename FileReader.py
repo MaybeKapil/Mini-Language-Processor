@@ -81,14 +81,18 @@ class FileReader:
     def open_file(self, some_file):
         global input_file
 
+        # Try to open the file in read-only mode
         try:
             input_file = open(some_file, 'r')
+        # If file not found, report error.
         except FileNotFoundError:
             print(f"File {some_file} not found.", file=sys.stderr)
             return
+        # If there is a lack of permission, report error.
         except PermissionError:
             print(f"Insufficient permission to read {some_file}.", file=sys.stderr)
             return
+        # If the file is not a file but rather a directory, report error.
         except IsADirectoryError:
             print(f"{some_file} is a directory.", file = sys.stderr)
             return
