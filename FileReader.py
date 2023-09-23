@@ -129,3 +129,18 @@ class FileReader:
 
         # Close file after reading is complete.
         input_file.close
+
+    def main(self):
+        self.read_file();
+
+        while(True):
+            user_input = input("Press enter to read a new file. Otherwise, type \"quit\" or \"exit\" to terminate the program: ")
+            if (user_input == "quit" or user_input == "exit"):
+                print("Program terminating...")
+                break;
+            else:
+                self.read_file();
+
+if __name__ == "__main__":
+    reader = FileReader()
+    reader.main()
