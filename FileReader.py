@@ -97,8 +97,9 @@ class FileReader:
             print(f"{some_file} is a directory.", file = sys.stderr)
             return
 
-    # End of function definition.
-
+    # Gets user input for a file to read, opens the file, and reads the file character by character.
+    # Printing out the position of each character followed by the character.
+    # Format: line:column character
     def read_file(self):
 
         # Prompt the user for a valid file name and open the file to for reading.
@@ -131,16 +132,23 @@ class FileReader:
         input_file.close
 
     def main(self):
+        # Read and display the initial file
         self.read_file();
 
         while(True):
+            # Prompt for user input regarding if they would like to read more files or not.
             user_input = input("Press enter to read a new file. Otherwise, type \"quit\" or \"exit\" to terminate the program: ")
+
+            # Check if the user wants to terminate the program.
             if (user_input == "quit" or user_input == "exit"):
                 print("Program terminating...")
                 break;
             else:
+                # User doesn't want to terminate program so read and display another file.
                 self.read_file();
 
 if __name__ == "__main__":
+    # Create an instance of the FileReader class
     reader = FileReader()
+    # Run the main method of the FileReader instance
     reader.main()
