@@ -77,8 +77,21 @@ class fileReader:
 
     # Opens the file specified by the 'some_file' argument in read-only mode ('r').
     # Does not return a value.
+    # Used this webpage for help on how to error handle: https://www.topbug.net/blog/2020/10/03/catching-filenotfounderror-watch-out/
     def open_file(some_file):
-        file = open(some_file, 'r')
+        global input_file
+
+        try:
+            input_file = open(some_file, 'r')
+        except FileNotFoundError:
+            print(f"File {some_file} not found.", file=sys.stderr)
+            return
+        except PermissionError:
+            print(f"Insufficient permission to read {some_file}.", file=sys.stderr)
+            return
+        except IsADirectoryError:
+            print(f"{some_file} is a directory.", file = sys.stderr)
+            return
 
     # End of function definition.
 
