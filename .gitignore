@@ -4,3 +4,6 @@ Created with the help of https://www.toptal.com/developers/gitignore/api/visuals
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Ignore the test file
+test.txt
