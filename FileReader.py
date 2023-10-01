@@ -1,3 +1,5 @@
+# Not uploaded to BitBucket
+
 # Import the 'isfile' function from the 'os.path' submodule.
 import os.path
 
@@ -18,7 +20,7 @@ current_column = 0
 # The file to be read.
 input_file = None
 
-class FileReader:
+class FileReaderImproved:
     # Reads the next character from the input file and updates character and position values accordingly.
     # Does not return a value.
     def next_char(self):
@@ -56,27 +58,8 @@ class FileReader:
         pos = f"{current_line}:{current_column}"
         return pos
 
-
-    # Prompt the user to enter a valid file name.
-    # Returns the valid file name entered by the user.
-    def get_file_name(self):
-        while(True):
-            # Assume the file is in the same directory as the executable reader.
-            file_name = input("Enter the file name: ")
-            path = './' + file_name
-
-            # Verify if the user input corresponds to a valid file.
-            # If the input is invalid, prompt the user again for a valid file name until a valid file name is obtained.
-            if (os.path.isfile(path) == False):
-                print("Invalid file. Please try again.\n")
-                continue
-            else:
-                break
-
-        return file_name
-
     # Opens the file specified by the 'some_file' argument in read-only mode ('r').
-    # Does not return a value.
+    # Returns 1 if file was successfully opened, otherwise returns 0.
     # Used this webpage for help on how to error handle: https://www.topbug.net/blog/2020/10/03/catching-filenotfounderror-watch-out/
     def open_file(self, some_file):
         global input_file
@@ -84,71 +67,73 @@ class FileReader:
         # Try to open the file in read-only mode
         try:
             input_file = open(some_file, 'r')
+            # If file opened successfully, return 1.
+            return 1
         # If file not found, report error.
         except FileNotFoundError:
-            print(f"File {some_file} not found.", file=sys.stderr)
-            return
+            print(f"ERROR: File {some_file} not found.\n", file=sys.stderr)
+            return 0
         # If there is a lack of permission, report error.
         except PermissionError:
-            print(f"Insufficient permission to read {some_file}.", file=sys.stderr)
-            return
+            print(f"ERROR: Insufficient permission to read {some_file}.\n", file=sys.stderr)
+            return 0
         # If the file is not a file but rather a directory, report error.
         except IsADirectoryError:
-            print(f"{some_file} is a directory.", file = sys.stderr)
-            return
+            print(f"ERROR: {some_file} is a directory.\n", file = sys.stderr)
+            return 0
 
     # Gets user input for a file to read, opens the file, and reads the file character by character.
     # Printing out the position of each character followed by the character.
     # Format: line:column character
-    def read_file(self):
+    def read_file(self, user_input):
+        global input_file
 
-        # Prompt the user for a valid file name and open the file to for reading.
-        self.open_file(self.get_file_name())
+        # Try opening the file.
+        # If valid and file was successfully opened, value is 1.
+        # If invalid and file was not opened, value is 0.
+        valid_file = self.open_file(user_input)
 
-        # Read the first character from the file.
-        self.next_char()
-
-        # Loop until end-of-text character is reached.
-        # This is done by looping until the value of the 'current_char' variable, which is obtained by using get_current_char(), is empty.
-        # An empty value indicates that End of File has been reached.
-        while(self.get_current_char()):
-            # Print the position of the current character followed by the character.
-            print(self.position() + " ", end="")
-
-            # Check if the current character is a LF character ('\n')
-            # If it is an LF character, print an empty line to represent the LF character as an empty string.
-            if (self.get_current_char() == '\n'):
-                print()
-            # If it isn't an LF character, print the current character.
-            else:
-                print(self.get_current_char())
-
-            # Call the next_char function to read the next character from the file.
+        if (valid_file == 1):
+            # Read the first character from the file.
             self.next_char()
 
-        print("Reading and displaying the input file has been completed")
+            # Loop until end-of-text character is reached.
+            # This is done by looping until the value of the 'current_char' variable, which is obtained by using get_current_char(), is empty.
+            # An empty value indicates that End of File has been reached.
+            while(self.get_current_char()):
+                # Print the position of the current character followed by the character.
+                print(self.position() + " ", end="")
 
-        # Close file after reading is complete.
-        input_file.close
+                # Check if the current character is a LF character ('\n')
+                # If it is an LF character, print an empty line to represent the LF character as an empty string.
+                if (self.get_current_char() == '\n'):
+                    print()
+                # If it isn't an LF character, print the current character.
+                else:
+                    print(self.get_current_char())
 
-    def main(self):
-        # Read and display the initial file
-        self.read_file();
+                # Call the next_char function to read the next character from the file.
+                self.next_char()
 
+            print()
+            print("Reading and displaying the input file has been completed")
+            print()
+
+            # Close file after reading is complete.
+            input_file.close
+            input_file = None
+
+    def prompt_user(self):
         while(True):
-            # Prompt for user input regarding if they would like to read more files or not.
-            user_input = input("Press enter to read a new file. Otherwise, type \"quit\" or \"exit\" to terminate the program: ")
-
-            # Check if the user wants to terminate the program.
-            if (user_input == "quit" or user_input == "exit"):
+            user_input = input(">>> Enter a file name, or type 'quit' or 'exit' to exit: ")
+            if(user_input == "quit" or user_input == "exit"):
                 print("Program terminating...")
-                break;
+                break
             else:
-                # User doesn't want to terminate program so read and display another file.
-                self.read_file();
+                self.read_file(user_input)
 
 if __name__ == "__main__":
     # Create an instance of the FileReader class
-    reader = FileReader()
+    reader = FileReaderImproved()
     # Run the main method of the FileReader instance
-    reader.main()
+    reader.prompt_user()
