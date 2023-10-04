@@ -29,7 +29,7 @@ class FileReader:
     # Does not return a value.
     def next_char(self):
         # Ensures reference to global variables, not variables of local scope.
-        global current_char, current_line, current_column
+        global current_char, current_line, current_column, input_file
 
         # Reads one character from the file.
         current_char = input_file.read(1)
