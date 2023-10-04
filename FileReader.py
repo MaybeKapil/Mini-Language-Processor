@@ -59,6 +59,16 @@ class FileReader:
         global current_char
         return current_char
 
+    # Returns an integer representing the line number of the most recently read character.
+    def get_current_line(self):
+        global current_line
+        return current_line
+
+    # Returns an integer representing the column number of the most recently read character.
+    def get_current_column(self):
+        global current_column
+        return current_column
+
     # Returns a string representation of the current position in the format "line:column".
     def position(self):
         # Concatenate the current line and column integers with a colon separator.
