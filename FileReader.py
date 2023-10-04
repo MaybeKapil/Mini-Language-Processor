@@ -83,6 +83,12 @@ class FileReaderImproved:
             print(f"ERROR: {some_file} is a directory.\n", file = sys.stderr)
             return 0
 
+    def reset_file(self):
+        global input_file
+
+        input_file.close
+        input_file = None
+
     # Gets user input for a file to read, opens the file, and reads the file character by character.
     # Printing out the position of each character followed by the character.
     # Format: line:column character
@@ -120,12 +126,6 @@ class FileReaderImproved:
             print()
 
             self.reset_file()
-
-    def reset_file(self):
-        global input_file
-
-        input_file.close
-        input_file = None
 
     def prompt_user(self):
         while(True):
