@@ -20,7 +20,7 @@ current_column = 0
 # The file to be read.
 input_file = None
 
-class FileReaderImproved:
+class FileReader:
     # Reads the next character from the input file and updates character and position values accordingly.
     # Does not return a value.
     def next_char(self):
@@ -138,6 +138,6 @@ class FileReaderImproved:
 
 if __name__ == "__main__":
     # Create an instance of the FileReader class
-    reader = FileReaderImproved()
+    reader = FileReader()
     # Run the main method of the FileReader instance
     reader.prompt_user()
