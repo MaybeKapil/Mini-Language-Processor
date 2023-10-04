@@ -1,5 +1,3 @@
-# Not uploaded to BitBucket
-
 # Import the 'isfile' function from the 'os.path' submodule.
 import os.path
 
