@@ -87,7 +87,6 @@ class FileReaderImproved:
     # Printing out the position of each character followed by the character.
     # Format: line:column character
     def read_file(self, user_input):
-        global input_file
 
         # Try opening the file.
         # If valid and file was successfully opened, value is 1.
@@ -120,9 +119,13 @@ class FileReaderImproved:
             print("Reading and displaying the input file has been completed")
             print()
 
-            # Close file after reading is complete.
-            input_file.close
-            input_file = None
+            self.reset_file()
+
+    def reset_file(self):
+        global input_file
+
+        input_file.close
+        input_file = None
 
     def prompt_user(self):
         while(True):
