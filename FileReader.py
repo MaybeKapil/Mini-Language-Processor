@@ -21,6 +21,12 @@ current_column = 0
 input_file = None
 
 class FileReader:
+    # def __init__(self):
+    #     self.current_char = ''
+    #     self.current_line = 1
+    #     self.current_column = 0
+    #     self.input_file = None
+
     # Reads the next character from the input file and updates character and position values accordingly.
     # Does not return a value.
     def next_char(self):
