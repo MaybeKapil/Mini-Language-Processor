@@ -50,6 +50,7 @@ class FileReaderImproved:
 
     # Returns a string containing the character that was just read.
     def get_current_char(self):
+        global current_char
         return current_char
 
     # Returns a string representation of the current position in the format "line:column".
