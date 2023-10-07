@@ -1,17 +1,49 @@
-# import FileReader
+# Import the FileReader class and string module
+import FileReader, string
 
-# reader = FileReader()
+# Create an instance of the FileReader class to use for reading user's file
+reader = FileReader.FileReader()
+
+# cant use this because this uses the FileReader read_file() which doesn't read the file as necessary
 # reader.promptUser()
 
-import string
+# Defines a constant variable that stores the three types of whitespace characters.
+# Types: space (' '), tab ('\t'), line feed ('\n')
+WHITE_SPACE_CHARS = string.whitespace
 
-token_dictionary = {}
+# SPECIAL_CHARS = string.punctuation
+
+# special_characters = '!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~}'
+
+# Defines a constant variable that stores all uppercase and
+# lowercase letter characters of the alphabet (a-z and A-Z).
+LETTER_CHARS = string.ascii_letters
+
+# Defines a constant variable that stores all digit character (0-9).
+DIGIT_CHARS = string.digits
+
+# Defines a constant variable that stores all the valid operators within the syntax.
+# Valid operators includes assignment operator, relational operator, additive operator,
+# multiplicative operator, and unary operator.
+OPERATOR_CHARS = {':=', '<', '=<', '=', '!=', '>=', '>', '+', '-', '*' , '/'}
+
+# Defines a constant variable that stores all the valid punctuation characters within the syntax.
+PUNCTUATION_CHARS = {':', '.', ',', ';', '(', ')'}
+
+# Defines a constant variable that stores the set of all the valid keywords within the syntax.
+KEYWORDS = ["program", "bool", "int", "if", "then", "else", "end", \
+            "while", "do", "end", "print", "or", "mod", "and", "not", \
+                "false", "true"]
+
+# Lexeme and token are interchangeable.
+# Defines a variable that will be used to store the current token.
 current_token = ""
 
-special_characters = string.punctuation
+# Defines a variable that will be used to store the type of the current token.
+token_type = ""
 
-invalid_first_token_char = string.punctuation + " "
-# invalid_first_token_char = '!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~}'
+# Defines a variable that will be used to store the current token.
+token_pos = ""
 
 class LexicalAnalyzer:
     # global reader
