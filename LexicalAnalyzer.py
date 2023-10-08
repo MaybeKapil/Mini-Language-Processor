@@ -253,6 +253,21 @@ class LexicalAnalyzer:
         else:
             self.consume_current_char()
 
+    def consume_current_char(self):
+        global reader
+
+        """
+        Appends the current character value that was read
+        from the file to the current token value and then
+        advanced the file reader to the next character.
+
+        No return value.
+        """
+
+        current_char = reader.get_current_char()
+        self.append_current_token(current_char)
+        reader.next_char()
+
     # The position of the lexeme.
     # The position is a pair consisting of the line number of the lexeme
     # and the position of the first character of the lexeme in that line.
