@@ -268,13 +268,6 @@ class LexicalAnalyzer:
         self.append_current_token(current_char)
         reader.next_char()
 
-    # The position of the lexeme.
-    # The position is a pair consisting of the line number of the lexeme
-    # and the position of the first character of the lexeme in that line.
-    def token_position():
-        print("work in progress")
-
-
     def read_file(self, user_input):
         # file_opened = self.open_file(user_input)
 
