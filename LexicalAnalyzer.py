@@ -107,6 +107,52 @@ class LexicalAnalyzer:
         global token_pos
         token_pos = position
 
+    def get_token_type(self):
+        """
+        Get the current token type.
+
+        Returns:
+            The current token type.
+        """
+
+        global token_type
+        return token_type
+
+    def set_token_type(self):
+        """
+        Set the current token value to the provided token value.
+
+        The types include: ID, NUM, end-of-text, keywords*, symbols**, end-of-text
+
+        * For keywords the keyword itself is the kind.
+        ** For symbols, the symbol itself is the kind.
+
+        Args:
+            token_val (str): The token value to set as the current token.
+        """
+
+        global LETTER_CHARS, DIGIT_CHARS, OPERATOR_CHARS, KEYWORDS, \
+            token_type
+
+        token = self.get_current_token()
+
+        token_type = ""
+
+        if (token.isdigit()):
+            token_type = "NUM"
+        elif (token in KEYWORDS or
+              token in OPERATOR_CHARS):
+            token_type = current_token
+        elif (token == '.'):
+            token_type = "end-of-text"
+        elif all (char in LETTER_CHARS or \
+                  char in DIGIT_CHARS or \
+                    char == '_' \
+                        for char in token):
+            token_type = "ID"
+        else:
+            token_type = token
+
     def skip_white_spaces(self):
         print("work in progress")
 
