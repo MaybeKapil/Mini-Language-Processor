@@ -253,6 +253,18 @@ class LexicalAnalyzer:
         else:
             self.consume_current_char()
 
+        if (self.get_current_token() == "//"):
+
+            # While the file still contains unread characters,
+            # keep getting the next character until you reach a line feed
+            # and then get the next character so that you are on the next line
+            while(reader.get_current_char() and reader.get_current_char() != "\n"):
+                reader.next_char()
+            reader.next_char()
+
+            # if (reader.get_current_char()):
+            #     self.next_token()
+
     def consume_current_char(self):
         global reader
 
@@ -315,8 +327,13 @@ class LexicalAnalyzer:
             # An empty value indicates that End of File has been reached.
             while(reader.get_current_char()):
                 self.next_token()
-                self.set_token_type()
-                self.token_printer()
+
+                # skip token if it is a double slash
+                # syntax indicates that comment begins with a double slash
+                # lexical analyzer should omit comments (and whitespaces)
+                if (self.get_current_token() != "//"):
+                    self.set_token_type()
+                    self.token_printer()
 
                 # Print the position of the current character followed by the character.
                 # print(f"{self.token_position()}: '{token_type()}' '{self.get_current_token()}")
