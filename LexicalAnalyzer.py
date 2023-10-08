@@ -196,24 +196,62 @@ class LexicalAnalyzer:
             # store the new current character to be used for reevaluation of the while conditional statement
             current_char = reader.get_current_char()
 
-    # get the next token
     def next_token(self):
+        """
+        Gets the next token from the file by reading the file
+        character by character until all the characters in the
+        file have been read.
+
+        No return value.
+        """
+
+        global WHITE_SPACE_CHARS, LETTER_CHARS, \
+            DIGIT_CHARS, OPERATOR_CHARS, PUNCTUATION_CHARS, \
+                reader
+
+        # print("test 12312")
+
         # use next_char from the last code
 
         # use next_char to read until you reach a whitespace or character other than _
-        # how do you prevent stuff like prog_ram?
-        # i think you kind of have to make sure that the first value until white space is
+        # (ignore) how do you prevent stuff like prog_ram? --> first_token should solve this
 
         # get next character until you reach whitespace or invalid character for that type
         # basically read until you get to whitespace or symbols other than _
 
-        # token = ""
-        # while (True):
+        # while (current_char not in white_space_chars and
+        #        current_char not in special_chars):
+
+        #     self.append_current_token(current_char)
         #     reader.next_char()
         # return
+        # current_char = reader.get_current_char()
 
+        # clear the current_token before getting the new token
+        self.set_current_token("")
 
-        print("work in progress")
+        # if the current character is a whitespace, skip it and skill all ot
+        if (reader.get_current_char() in WHITE_SPACE_CHARS):
+            self.skip_white_spaces()
+
+        # after all the white spaces are skipped (if there were any), you end up at a non-whitespace character
+        # and therefore need to mark this as the beginning of the token
+        self.set_token_position(reader.position())
+
+        if (reader.get_current_char() in OPERATOR_CHARS or
+            reader.get_current_char() == ':'):
+            while(reader.get_current_char() in OPERATOR_CHARS or
+                  reader.get_current_char() == ':'):
+                self.consume_current_char()
+        elif (reader.get_current_char() in LETTER_CHARS or
+                  reader.get_current_char() in DIGIT_CHARS or
+                  reader.get_current_char() == '_'):
+            while(reader.get_current_char() in LETTER_CHARS or
+                  reader.get_current_char() in DIGIT_CHARS or
+                  reader.get_current_char() == '_'):
+                self.consume_current_char()
+        else:
+            self.consume_current_char()
 
     # The position of the lexeme.
     # The position is a pair consisting of the line number of the lexeme
