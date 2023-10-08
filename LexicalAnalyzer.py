@@ -80,6 +80,33 @@ class LexicalAnalyzer:
         global current_token
         current_token += token_val
 
+    def get_token_position(self):
+        """
+        Gets the position of the token.
+
+        The position is represented as a pair consisting of the line number and column where
+        the first character of the token occurs.
+
+        Return:
+            A string representing the position of the first character of the current token.
+            Format: line:column
+        """
+
+        global token_pos
+        return token_pos
+
+    def set_token_position(self, position):
+        """
+        Sets the position of the current token.
+
+        Args:
+            position (str): The position value of the current token.
+        """
+
+
+        global token_pos
+        token_pos = position
+
     def skip_white_spaces(self):
         print("work in progress")
 
