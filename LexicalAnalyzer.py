@@ -333,5 +333,31 @@ class LexicalAnalyzer:
 
             reader.reset()
 
+    def prompt_user(self):
+        """
+        Prompts user for a file to lexically analyze.
+        Once user inputs valid file, the file is
+        lexically analyzed.
+
+        The user can quit at any time they receive a
+        prompt by typing 'quit' or 'exit' and
+        pressing enter.
+
+        Note: This is the same function from FileReader.py.
+        By implementing it in this class (LexicalAnalyzer),
+        it uses this classes read_file() function rather than
+        the read_file() function contained in FileReader.py
+
+        No return value
+        """
+        while(True):
+            user_input = input(">>> Enter a file name, or type 'quit' or 'exit' to exit: ")
+            if(user_input == "quit" or user_input == "exit"):
+                print("Program terminating...")
+                break
+            else:
+                self.read_file(user_input)
+
+
 if __name__ == "__main__":
     print("in progress")
