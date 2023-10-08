@@ -46,7 +46,39 @@ token_type = ""
 token_pos = ""
 
 class LexicalAnalyzer:
-    # global reader
+
+    def get_current_token(self):
+        """
+        Get the current token value.
+
+        Returns:
+            The current token value.
+        """
+
+        global current_token
+        return current_token
+
+    def set_current_token(self, token_val):
+        """
+        Set the current token value to the provided token value.
+
+        Args:
+            token_val (str): The token value to set as the current token.
+        """
+
+        global current_token
+        current_token = token_val
+
+    def append_current_token(self, token_val):
+        """
+        Append the provided token value to the current token.
+
+        Args:
+            token_val (str): The token value to append to the current token.
+        """
+
+        global current_token
+        current_token += token_val
 
     def skip_white_spaces(self):
         print("work in progress")
