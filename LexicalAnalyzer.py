@@ -196,16 +196,6 @@ class LexicalAnalyzer:
             # store the new current character to be used for reevaluation of the while conditional statement
             current_char = reader.get_current_char()
 
-    def first_token(self):
-        # # https://stackoverflow.com/a/63173907
-        # while(any c in invalid_first_token for c in next_char):
-        #     current_token += next_char
-
-        # https://stackoverflow.com/a/63173907
-        # while (invalid_first_token_char not in current_token):
-
-        print("work in progress")
-
     # get the next token
     def next_token(self):
         # use next_char from the last code
