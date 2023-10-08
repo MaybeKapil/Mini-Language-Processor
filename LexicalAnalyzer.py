@@ -262,6 +262,9 @@ class LexicalAnalyzer:
                 reader.next_char()
             reader.next_char()
 
+            # clear the current_token
+            self.set_current_token("")
+
             # if (reader.get_current_char()):
             #     self.next_token()
 
@@ -331,7 +334,7 @@ class LexicalAnalyzer:
                 # skip token if it is a double slash
                 # syntax indicates that comment begins with a double slash
                 # lexical analyzer should omit comments (and whitespaces)
-                if (self.get_current_token() != "//"):
+                if (self.get_current_token() != ""):
                     self.set_token_type()
                     self.token_printer()
 
