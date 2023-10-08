@@ -153,6 +153,25 @@ class LexicalAnalyzer:
         else:
             token_type = token
 
+    def get_token_value(self):
+        """
+        Get the current token value.
+
+        Only identifiers ('ID') and integers ('NUM') have values.
+        If it not an ID or NUM, then return None to indicate that it does not have a value.
+
+        Returns:
+            The current token value.
+        """
+
+        type = self.get_token_type()
+
+        if (type == "ID" or type == "NUM"):
+            # return self.get_current_token
+            return self.get_current_token()
+
+        return None
+
     def skip_white_spaces(self):
         print("work in progress")
 
