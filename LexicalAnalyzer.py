@@ -173,7 +173,28 @@ class LexicalAnalyzer:
         return None
 
     def skip_white_spaces(self):
-        print("work in progress")
+        """
+        Skip whitespaces in the file content read by the FileReader instance.
+        Advances until a non-whitespace character is encountered.
+
+        No return value.
+        """
+
+        global reader, WHITE_SPACE_CHARS
+
+        current_char = reader.get_current_char()
+        # if (current_char == ' 'or current_char == '\t' or current_char == '\n')
+        #     reader.next_char()
+
+        # if the current character is in the set of whitespace character,
+        # then the current character is a whitespace and will be skipped
+        # at the end, current_char will not be a white_space, resulting in the end of the while loop
+        while (current_char in WHITE_SPACE_CHARS):
+            # skip the current (whitespace) character by getting the next character
+            reader.next_char()
+
+            # store the new current character to be used for reevaluation of the while conditional statement
+            current_char = reader.get_current_char()
 
     def first_token(self):
         # # https://stackoverflow.com/a/63173907
