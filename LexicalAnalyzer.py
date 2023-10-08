@@ -268,6 +268,20 @@ class LexicalAnalyzer:
         self.append_current_token(current_char)
         reader.next_char()
 
+    def token_printer(self):
+        """
+        Prints the current token's position, it's type,
+        and it's value if it has one.
+
+        No return value.
+        """
+
+        if (self.get_token_value() != None):
+            print(f"{self.get_token_position()} '{self.get_token_type()}' {self.get_token_value()}")
+        else:
+            print(f"{self.get_token_position()} '{self.get_token_type()}'")
+
+
     def read_file(self, user_input):
         # file_opened = self.open_file(user_input)
 
