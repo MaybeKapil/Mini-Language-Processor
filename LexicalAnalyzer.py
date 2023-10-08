@@ -358,6 +358,8 @@ class LexicalAnalyzer:
             else:
                 self.read_file(user_input)
 
-
 if __name__ == "__main__":
-    print("in progress")
+    # Create an instance of the LexicalAnalyzer class
+    lexi = LexicalAnalyzer()
+    # Run the main method of the LexicalAnalyzer instance
+    lexi.prompt_user()
