@@ -283,19 +283,55 @@ class LexicalAnalyzer:
 
 
     def read_file(self, user_input):
-        # file_opened = self.open_file(user_input)
+        """
+        Gets user input for a file to read, opens the
+        file, reads the file character by character,
+        and analyzes the tokens.
 
-        # if (file_opened == 1):
-        #     self.next_char()
+        Prints out the position of each token followed
+        by the character.
 
-        #     # while end-of-text has not been reached
-        #     while(self.get_current_char()):
-        #         # get first token
-        #         self.first_token();
+        Format: position 'type' value
 
-        #         # get next token
-        #         self.next_token()
-        print("work in progress")
+        No return value.
+        """
+
+        global reader
+
+        # Try opening the file.
+        # If valid and file was successfully opened, value is 1.
+        # If invalid and file was not opened, value is 0.
+        valid_file = reader.open_file(user_input)
+
+        if (valid_file == 1):
+            # Read the first character from the file.
+            reader.next_char()
+
+            # self.valid_first_token()
+
+            # Loop until end-of-text character is reached.
+            # This is done by looping until the value of the 'current_char' variable,
+            # which is obtained by using get_current_char(), is empty.
+            # An empty value indicates that End of File has been reached.
+            while(reader.get_current_char()):
+                self.next_token()
+                self.set_token_type()
+                self.token_printer()
+
+                # Print the position of the current character followed by the character.
+                # print(f"{self.token_position()}: '{token_type()}' '{self.get_current_token()}")
+
+                # print(f"{self.get_token_position()}: {self.get_token_value()} ")
+
+                # Call the next_char function to read the next character from the file.
+                #reader.next_char()
+
+
+            print()
+            print("Reading and displaying the input file has been completed")
+            print()
+
+            reader.reset()
 
 if __name__ == "__main__":
     print("in progress")
