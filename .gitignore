@@ -5,13 +5,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Ignore the FileReader test file
-FileReader_test.txt
-
-# Ignore the LexicalAnalyzer test files
-LexicalAnalyzer_test_1.txt
-LexicalAnalyzer_test_2.txt
-LexicalAnalyzer_test_3.txt
+# Ignore the test files
+test_cases/
 
 # Ignore the comment file
 comments_for_self_reference.txt
