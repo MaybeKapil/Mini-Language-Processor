@@ -196,51 +196,61 @@ class LexicalAnalyzer:
             DIGIT_CHARS, OPERATOR_CHARS, PUNCTUATION_CHARS, \
                 reader
 
-        # print("test 12312")
+        token = ""
 
-        # use next_char from the last code
-
-        # use next_char to read until you reach a whitespace or character other than _
-        # (ignore) how do you prevent stuff like prog_ram? --> first_token should solve this
-
-        # get next character until you reach whitespace or invalid character for that type
-        # basically read until you get to whitespace or symbols other than _
-
-        # while (current_char not in white_space_chars and
-        #        current_char not in special_chars):
-
-        #     self.append_current_token(current_char)
-        #     reader.next_char()
-        # return
-        # current_char = reader.get_current_char()
-
-        # clear the current_token before getting the new token
-        self.set_current_token("")
-
-        # if the current character is a whitespace, skip it and skill all ot
-        if (reader.get_current_char() in WHITE_SPACE_CHARS):
-            self.skip_white_spaces()
+        # skip consecutive whitespaces until you reach a non-whitespace character
+        self.skip_white_spaces()
 
         # after all the white spaces are skipped (if there were any), you end up at a non-whitespace character
         # and therefore need to mark this as the beginning of the token
         self.set_token_position(reader.position())
 
-        if (reader.get_current_char() in OPERATOR_CHARS or
-            reader.get_current_char() == ':'):
-            while(reader.get_current_char() in OPERATOR_CHARS or
-                  reader.get_current_char() == ':'):
-                self.consume_current_char()
-        elif (reader.get_current_char() in LETTER_CHARS or
-                  reader.get_current_char() in DIGIT_CHARS or
-                  reader.get_current_char() == '_'):
-            while(reader.get_current_char() in LETTER_CHARS or
-                  reader.get_current_char() in DIGIT_CHARS or
-                  reader.get_current_char() == '_'):
-                self.consume_current_char()
-        else:
-            self.consume_current_char()
+        current_char = reader.get_current_char()
 
-        if (self.get_current_token() == "//"):
+        # not checking operator_char correctly because checking a single character to a string that is possibly >1 character
+        # only fails in the case of != because the rest have single character option
+        if any(current_char == operator[0] for operator in OPERATOR_CHARS):
+            token = current_char
+
+            while (True):
+                reader.next_char()
+                current_char = reader.get_current_char()
+                if (current_char and token + current_char in OPERATOR_CHARS):
+                    token += current_char
+                elif (token + current_char == '//'):
+                    token += current_char
+                    break
+                else:
+                    break
+        elif (current_char in LETTER_CHARS):
+            token = current_char
+
+            while (True):
+                reader.next_char()
+                current_char = reader.get_current_char()
+                if (current_char and
+                  (current_char in LETTER_CHARS or
+                  current_char in DIGIT_CHARS or
+                  current_char == '_')):
+                    token += current_char
+                else:
+                    break
+        elif (current_char in DIGIT_CHARS):
+            token = current_char
+
+            while (True):
+                reader.next_char()
+                current_char = reader.get_current_char()
+
+                if (current_char in DIGIT_CHARS):
+                    token += current_char
+                else:
+                    break
+        else:
+                token = current_char
+                reader.next_char()
+
+        if (token == "//"):
 
             # While the file still contains unread characters,
             # keep getting the next character until you reach a line feed
@@ -249,11 +259,12 @@ class LexicalAnalyzer:
                 reader.next_char()
             reader.next_char()
 
-            # clear the current_token
-            self.set_current_token("")
+            # clear the current_token to get rid of the double slash
+            # self.set_current_token("")
 
-            # if (reader.get_current_char()):
-            #     self.next_token()
+            token = ""
+
+        self.set_current_token(token)
 
     def consume_current_char(self):
         global reader
