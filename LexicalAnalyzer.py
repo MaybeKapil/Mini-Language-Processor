@@ -37,17 +37,18 @@ KEYWORDS = ["program", "bool", "int", "if", "then", "else", "end", \
             "while", "do", "end", "print", "or", "mod", "and", "not", \
                 "false", "true"]
 
-# Lexeme and token are interchangeable.
-# Defines a variable that will be used to store the current token.
-current_token = ""
-
-# Defines a variable that will be used to store the type of the current token.
-token_type = ""
-
-# Defines a variable that will be used to store the current token.
-token_pos = ""
-
 class LexicalAnalyzer:
+
+    def __init__(self):
+        # Lexeme and token are interchangeable.
+        # Defines a variable that will be used to store the current token.
+        self.current_token = ""
+
+        # Defines a variable that will be used to store the type of the current token.
+        self.token_type = ""
+
+        # Defines a variable that will be used to store the current token.
+        self.token_pos = ""
 
     def get_current_token(self):
         """
@@ -57,8 +58,7 @@ class LexicalAnalyzer:
             The current token value.
         """
 
-        global current_token
-        return current_token
+        return self.current_token
 
     def set_current_token(self, token_val):
         """
@@ -68,19 +68,7 @@ class LexicalAnalyzer:
             token_val (str): The token value to set as the current token.
         """
 
-        global current_token
-        current_token = token_val
-
-    def append_current_token(self, token_val):
-        """
-        Append the provided token value to the current token.
-
-        Args:
-            token_val (str): The token value to append to the current token.
-        """
-
-        global current_token
-        current_token += token_val
+        self.current_token = token_val
 
     def get_token_position(self):
         """
@@ -94,8 +82,7 @@ class LexicalAnalyzer:
             Format: line:column
         """
 
-        global token_pos
-        return token_pos
+        return self.token_pos
 
     def set_token_position(self, position):
         """
@@ -105,9 +92,7 @@ class LexicalAnalyzer:
             position (str): The position value of the current token.
         """
 
-
-        global token_pos
-        token_pos = position
+        self.token_pos = position
 
     def get_token_type(self):
         """
@@ -117,8 +102,7 @@ class LexicalAnalyzer:
             The current token type.
         """
 
-        global token_type
-        return token_type
+        return self.token_type
 
     def set_token_type(self):
         """
@@ -138,22 +122,23 @@ class LexicalAnalyzer:
 
         token = self.get_current_token()
 
-        token_type = ""
+        self.token_type = ""
 
         if (token.isdigit()):
-            token_type = "NUM"
+            self.token_type = "NUM"
         elif (token in KEYWORDS or
               token in OPERATOR_CHARS):
-            token_type = current_token
+            self.token_type = token
         elif (token == '.'):
-            token_type = "end-of-text"
+            self.token_type = "end-of-text"
         elif all (char in LETTER_CHARS or \
                   char in DIGIT_CHARS or \
                     char == '_' \
                         for char in token):
-            token_type = "ID"
+            self.token_type = "ID"
         else:
-            token_type = token
+            # for parenthesis, comma, colon, and semicolon
+            self.token_type = token
 
     def get_token_value(self):
         """
