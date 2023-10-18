@@ -15,6 +15,8 @@ WHITE_SPACE_CHARS = string.whitespace
 
 # special_characters = '!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~}'
 
+INVALID_CHARS = "!\"#$%&'?@[\]^`{|}~}'"
+
 # Defines a constant variable that stores all uppercase and
 # lowercase letter characters of the alphabet (a-z and A-Z).
 LETTER_CHARS = string.ascii_letters
