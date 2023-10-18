@@ -117,27 +117,33 @@ class LexicalAnalyzer:
             token_val (str): The token value to set as the current token.
         """
 
-        global LETTER_CHARS, DIGIT_CHARS, OPERATOR_CHARS, KEYWORDS, \
-            token_type
+        global LETTER_CHARS, DIGIT_CHARS, OPERATOR_CHARS, KEYWORDS
 
         token = self.get_current_token()
 
         self.token_type = ""
 
+        # if token contains all digits, then the token type is "NUM"
         if (token.isdigit()):
             self.token_type = "NUM"
+        # if the token is a keyword or an operator, then the token type
+        # is the token it self and the token will not have a value.
         elif (token in KEYWORDS or
               token in OPERATOR_CHARS):
             self.token_type = token
+        # if the token is a period, then the token type is end-of-text
         elif (token == '.'):
             self.token_type = "end-of-text"
+        # if the token is not a keyword but contains a letter, and/or
+        # digits, and/or underscore, then the token ID is of type "ID"
         elif all (char in LETTER_CHARS or \
                   char in DIGIT_CHARS or \
                     char == '_' \
                         for char in token):
             self.token_type = "ID"
+        # for parenthesis, comma, colon, and semicolon
+        # the type is the token itself and the token will have no value
         else:
-            # for parenthesis, comma, colon, and semicolon
             self.token_type = token
 
     def get_token_value(self):
@@ -196,6 +202,7 @@ class LexicalAnalyzer:
             DIGIT_CHARS, OPERATOR_CHARS, PUNCTUATION_CHARS, \
                 reader
 
+        # local token variable to store the token while the token is being "built"
         token = ""
 
         # skip consecutive whitespaces until you reach a non-whitespace character
@@ -205,51 +212,102 @@ class LexicalAnalyzer:
         # and therefore need to mark this as the beginning of the token
         self.set_token_position(reader.position())
 
+        # store the current character
         current_char = reader.get_current_char()
 
-        # not checking operator_char correctly because checking a single character to a string that is possibly >1 character
-        # only fails in the case of != because the rest have single character option
+        # if the current character matches any of the first character in the operator character sets
+        # then the token should be built as an operator token or a comment token
+        # comment token is included in this because division is an operation that is represented by '/'
+        # and comment is represented by '//' so they are similar
         if any(current_char == operator[0] for operator in OPERATOR_CHARS):
+
+            # set the token to the current character
             token = current_char
 
             while (True):
+                # advance reader to the next character in the file
                 reader.next_char()
+
+                # get and store the next character as the current character
                 current_char = reader.get_current_char()
+
+                # check if the new current character appended to the current token is
+                # still valid operator symbol
+                # if so, append to token
                 if (current_char and token + current_char in OPERATOR_CHARS):
                     token += current_char
+
+                # check if the new current character appended to the current token is
+                # a double slash ('//')
+                # if so, append to token and stop the loop as a comment token
+                # has been reached
                 elif (token + current_char == '//'):
                     token += current_char
                     break
+
+                # stop building the current token
                 else:
                     break
+
+        # check if the current character is a letter
         elif (current_char in LETTER_CHARS):
+            # set the token to the current character
+            # indicates that the first character of the token is a letter
+            # this means that the token will be an ID or keyword
             token = current_char
 
             while (True):
+                # advance reader to the next character in the file
                 reader.next_char()
+
+                # get and store the next character as the current character
                 current_char = reader.get_current_char()
+
+                # if the new current character is non empty and a letter,
+                # digit, or underscore, then add it to the token.
                 if (current_char and
                   (current_char in LETTER_CHARS or
                   current_char in DIGIT_CHARS or
                   current_char == '_')):
                     token += current_char
+
+                # if the new current character is empty or it is not a
+                # letter, digit, or underscore, stop building the current token
                 else:
                     break
+
+        # check if the current character is a digit
         elif (current_char in DIGIT_CHARS):
+            # set the token to the current character
+            # indicates that the first character of the token is a digit
+            # this means that the token will be a number
             token = current_char
 
             while (True):
+                # advance reader to the next character in the file
                 reader.next_char()
+                # get and store the next character as the current character
                 current_char = reader.get_current_char()
 
+                # if the new current character is still a digit,
+                # then add it to the token
                 if (current_char in DIGIT_CHARS):
                     token += current_char
+
+                # if the new current character is not a digit,
+                # stop building the current token
                 else:
                     break
+
+        # If the current character is not an operator, letter, or digit,
+        # then process it individually (single character token) as it is
+        # likely to be one of the following symbols: parenthesis, comma,
+        # colon, or semicolon
         else:
                 token = current_char
                 reader.next_char()
 
+        # if the token is a double slash, then it indicates the start of a comment and the whole comment should be ignored
         if (token == "//"):
 
             # While the file still contains unread characters,
@@ -285,7 +343,9 @@ class LexicalAnalyzer:
 
     def invalid_token_print(self):
         """
-        If the current character is invalid, then
+        If the current character is invalid, then print
+        the token's position, and the error message along
+        with the invalid character contained in the token.
         """
         print(f"{self.get_token_position()} ----- Error: Invalid token '{self.get_current_token()}'")
 
