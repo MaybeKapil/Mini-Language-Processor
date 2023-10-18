@@ -153,7 +153,7 @@ class LexicalAnalyzer:
 
         type = self.get_token_type()
 
-        if (type == "ID" or type == "NUM"):
+        if (type in ["ID", "NUM"]):
             # return self.get_current_token
             return self.get_current_token()
 
