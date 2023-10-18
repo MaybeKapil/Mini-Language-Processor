@@ -266,24 +266,8 @@ class LexicalAnalyzer:
 
         self.set_current_token(token)
 
-    def consume_current_char(self):
-        global reader
-
-        """
-        Appends the current character value that was read
-        from the file to the current token value and then
-        advanced the file reader to the next character.
-
-        No return value.
-        """
-
-        current_char = reader.get_current_char()
-        self.append_current_token(current_char)
-        reader.next_char()
-
     def token_printer(self):
         """
-
         If the current token has a value, print the current
         token's position, type, and value.
 
