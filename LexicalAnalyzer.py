@@ -289,6 +289,15 @@ class LexicalAnalyzer:
         """
         print(f"{self.get_token_position()} ----- Error: Invalid token '{self.get_current_token()}'")
 
+    def validate_token(self, token):
+        # If the token contains any of the invalid character(s), then it is considered invalid
+        # Underscore or colon or exclamation point by itself is not a valid token
+        # Underscore can only appear in ID, which has to start with a letter
+        # if (token in INVALID_CHARS or token == '_' or token == ):
+        if (token in INVALID_CHARS or token == '_' or token == '!'):
+            return False
+        return True
+
     def read_file(self, user_input):
         """
         Gets user input for a file to read, opens the
