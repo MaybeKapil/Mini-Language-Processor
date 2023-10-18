@@ -283,6 +283,11 @@ class LexicalAnalyzer:
         else:
             print(f"{self.get_token_position()} '{self.get_token_type()}'")
 
+    def invalid_token_print(self):
+        """
+        If the current character is invalid, then
+        """
+        print(f"{self.get_token_position()} ----- Error: Invalid token '{self.get_current_token()}'")
 
     def read_file(self, user_input):
         """
