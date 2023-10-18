@@ -266,9 +266,10 @@ class LexicalAnalyzer:
 
         self.set_current_token(token)
 
-    def token_printer(self):
+    def valid_token_printer(self):
         """
-        If the current token has a value, print the current
+
+        If the current token is valid and has a value, print the current
         token's position, type, and value.
 
         If the current token does not have a value, print
