@@ -320,6 +320,10 @@ class LexicalAnalyzer:
         valid_file = reader.open_file(user_input)
 
         if (valid_file == 1):
+            # Boolean variable for token validity
+            # True = token is valid; false = token is invalid
+            token_is_valid = True
+
             # Read the first character from the file.
             reader.next_char()
 
@@ -327,13 +331,19 @@ class LexicalAnalyzer:
             # This is done by looping until the value of the 'current_char' variable,
             # which is obtained by using get_current_char(), is empty.
             # An empty value indicates that End of File has been reached.
-            while(reader.get_current_char()):
+            # If a non-valid token is reached, terminate lexical analyzer.
+            while(reader.get_current_char() and token_is_valid):
                 self.next_token()
+                token = self.get_current_token()
 
-                # skip token if it it is empty
-                if (self.get_current_token() != ""):
-                    self.set_token_type()
-                    self.token_printer()
+                if (token != ""):
+                    token_is_valid = self.validate_token(token)
+                    if (token_is_valid == True):
+                        self.set_token_type()
+                        self.valid_token_printer()
+                    else:
+                        self.invalid_token_print()
+                    # self.token_printer()
 
             print()
             print(f"Concluded lexical analysis on {user_input}")
@@ -364,6 +374,7 @@ class LexicalAnalyzer:
                 print("Program terminating...")
                 break
             else:
+                # Process file for lexical analysis
                 self.read_file(user_input)
 
 if __name__ == "__main__":
