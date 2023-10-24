@@ -213,6 +213,25 @@ class LexicalAnalyzer:
         # and therefore need to mark this as the beginning of the token
         self.set_token_position(reader.position())
 
+        token = self.build_token()
+
+        if (token == "//"):
+            # clear the current_token to get rid of the double slash
+            self.skip_comment()
+            token = ""
+
+        self.set_current_token(token)
+
+    def build_token(self):
+        """
+        Build the token by checking the current character and determining it's type.
+        Based on it's type, call a respective function to take care of building the token.
+
+        Return:
+            The token
+        """
+        global reader
+
         # store the current character
         current_char = reader.get_current_char()
 
@@ -221,109 +240,165 @@ class LexicalAnalyzer:
         # comment token is included in this because division is an operation that is represented by '/'
         # and comment is represented by '//' so they are similar
         if any(current_char == operator[0] for operator in OPERATOR_CHARS):
-
-            # set the token to the current character
-            token = current_char
-
-            while (True):
-                # advance reader to the next character in the file
-                reader.next_char()
-
-                # get and store the next character as the current character
-                current_char = reader.get_current_char()
-
-                # check if the new current character appended to the current token is
-                # still valid operator symbol
-                # if so, append to token
-                if (current_char and token + current_char in OPERATOR_CHARS):
-                    token += current_char
-
-                # check if the new current character appended to the current token is
-                # a double slash ('//')
-                # if so, append to token and stop the loop as a comment token
-                # has been reached
-                elif (token + current_char == '//'):
-                    token += current_char
-                    break
-
-                # stop building the current token
-                else:
-                    break
-
+            return self.build_operator_or_comment_token()
         # check if the current character is a letter
         elif (current_char in LETTER_CHARS):
-            # set the token to the current character
-            # indicates that the first character of the token is a letter
-            # this means that the token will be an ID or keyword
-            token = current_char
-
-            while (True):
-                # advance reader to the next character in the file
-                reader.next_char()
-
-                # get and store the next character as the current character
-                current_char = reader.get_current_char()
-
-                # if the new current character is non empty and a letter,
-                # digit, or underscore, then add it to the token.
-                if (current_char and
-                  (current_char in LETTER_CHARS or
-                  current_char in DIGIT_CHARS or
-                  current_char == '_')):
-                    token += current_char
-
-                # if the new current character is empty or it is not a
-                # letter, digit, or underscore, stop building the current token
-                else:
-                    break
+            return self.build_id_or_keyword_token()
 
         # check if the current character is a digit
         elif (current_char in DIGIT_CHARS):
-            # set the token to the current character
-            # indicates that the first character of the token is a digit
-            # this means that the token will be a number
-            token = current_char
-
-            while (True):
-                # advance reader to the next character in the file
-                reader.next_char()
-                # get and store the next character as the current character
-                current_char = reader.get_current_char()
-
-                # if the new current character is still a digit,
-                # then add it to the token
-                if (current_char in DIGIT_CHARS):
-                    token += current_char
-
-                # if the new current character is not a digit,
-                # stop building the current token
-                else:
-                    break
+            return self.build_number_token()
 
         # If the current character is not an operator, letter, or digit,
         # then process it individually (single character token) as it is
         # likely to be one of the following symbols: parenthesis, comma,
         # colon, or semicolon
         else:
-                token = current_char
-                reader.next_char()
+            reader.next_char()
+            return current_char
 
-        # if the token is a double slash, then it indicates the start of a comment and the whole comment should be ignored
-        if (token == "//"):
+    def build_operator_or_comment_token(self):
+        """
+        Build operator or comment token by reading the input file character by character.
 
-            # While the file still contains unread characters,
-            # keep getting the next character until you reach a line feed
-            # and then get the next character so that you are on the next line
-            while(reader.get_current_char() and reader.get_current_char() != "\n"):
-                reader.next_char()
+        Operator tokens are the following: ':=', '<', '=<', '=', '!=', '>=', '>', '+', '-', '*' , '/'
+
+        Comment token is '//'.
+
+        Return:
+            The operator or comment token that was built.
+        """
+        # store the current character
+        current_char = reader.get_current_char()
+
+        # set the token to the current character
+        token = current_char
+
+        while (True):
+            # advance reader to the next character in the file
             reader.next_char()
 
-            # clear the current_token to get rid of the double slash
-            # self.set_current_token("")
+            # get and store the next character as the current character
+            current_char = reader.get_current_char()
 
-            token = ""
+            # check if the new current character appended to the current token is
+            # still valid operator symbol
+            # if so, append to token
+            if (current_char and token + current_char in OPERATOR_CHARS):
+                token += current_char
 
-        self.set_current_token(token)
+            # check if the new current character appended to the current token is
+            # a double slash ('//')
+            # if so, append to token and stop the loop as a comment token
+            # has been reached
+            elif (token + current_char == '//'):
+                token += current_char
+                break
+
+            # stop building the current token
+            else:
+                break
+
+        return token
+
+    def build_id_or_keyword_token(self):
+        """
+        Build id or keyword token by reading the input file character by character.
+
+        Identifiers (ID) is a string that begins with a letter and optionally followed by a
+        sequence of letters, digits, and/or underscore. IDs are not keywords.
+
+        Keyword tokens are the following:
+            "program", "bool", "int", "if", "then", "else", "end",
+            "while", "do", "end", "print", "or", "mod", "and", "not",
+            "false", "true"
+
+        Return:
+            The id or keyword token that was built.
+        """
+
+        # store the current character
+        current_char = reader.get_current_char()
+
+        # set the token to the current character
+        # indicates that the first character of the token is a letter
+        # this means that the token will be an ID or keyword
+        token = current_char
+
+        while (True):
+            # advance reader to the next character in the file
+            reader.next_char()
+
+            # get and store the next character as the current character
+            current_char = reader.get_current_char()
+
+            # if the new current character is non empty and a letter,
+            # digit, or underscore, then add it to the token.
+            if (current_char and
+                (current_char in LETTER_CHARS or
+                current_char in DIGIT_CHARS or
+                current_char == '_')):
+                token += current_char
+
+            # if the new current character is empty or it is not a
+            # letter, digit, or underscore, stop building the current token
+            else:
+                break
+
+        return token
+
+    def build_number_token(self):
+        """
+        Build number token by reading the input file character by character.
+
+        Number is a string that contains only digits. No commas or periods are allowed.
+
+        All integers are within range and don't need to check for overflow.
+
+        Return:
+            The number token that was built.
+        """
+
+        # store the current character
+        current_char = reader.get_current_char()
+
+        # set the token to the current character
+        # indicates that the first character of the token is a digit
+        # this means that the token will be a number
+        token = current_char
+
+        while (True):
+            # advance reader to the next character in the file
+            reader.next_char()
+            # get and store the next character as the current character
+            current_char = reader.get_current_char()
+
+            # if the new current character is still a digit,
+            # then add it to the token
+            if (current_char and current_char in DIGIT_CHARS):
+                token += current_char
+
+            # if the new current character is not a digit,
+            # stop building the current token
+            else:
+                break
+
+        return token
+
+    def skip_comment(self):
+        """
+        Read and discard all subsequent characters after '//'
+        up to and including the line feed character ('\n').
+        """
+
+        # While the file still contains unread characters,
+        # keep getting the next character until you reach a line feed
+        # and then get the next character so that you are on the next line
+        while(reader.get_current_char() and reader.get_current_char() != "\n"):
+            reader.next_char()
+        reader.next_char()
+
+
 
     def valid_token_printer(self):
         """
