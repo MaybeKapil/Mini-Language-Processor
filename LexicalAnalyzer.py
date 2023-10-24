@@ -66,6 +66,8 @@ class LexicalAnalyzer:
 
         Args:
             token_val (str): The token value to set as the current token.
+
+        No return value.
         """
 
         self.current_token = token_val
@@ -90,6 +92,9 @@ class LexicalAnalyzer:
 
         Args:
             position (str): The position value of the current token.
+
+
+        No return value.
         """
 
         self.token_pos = position
@@ -115,6 +120,8 @@ class LexicalAnalyzer:
 
         Args:
             token_val (str): The token value to set as the current token.
+
+        No return value.
         """
 
         global LETTER_CHARS, DIGIT_CHARS, OPERATOR_CHARS, KEYWORDS
@@ -190,9 +197,7 @@ class LexicalAnalyzer:
 
     def next_token(self):
         """
-        Gets the next token from the file by reading the file
-        character by character until all the characters in the
-        file have been read.
+        Skips whitespaces, stores the to-be generated token's starting position
 
         No return value.
         """
