@@ -483,6 +483,8 @@ class LexicalAnalyzer:
                     else:
                         self.invalid_token_print()
 
+            # print 'end-of-text' token if, once all the file has been tokenized,
+            # all of the characters in the file were valid.
             if (token_is_valid == True):
                 self.end_of_text_token_printer()
 
