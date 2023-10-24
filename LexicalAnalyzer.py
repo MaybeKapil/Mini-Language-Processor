@@ -398,7 +398,10 @@ class LexicalAnalyzer:
             reader.next_char()
         reader.next_char()
 
-
+    def end_of_text_token_printer(self):
+        # Concatenate the current line and column integers with a colon separator.
+        pos = f"{reader.get_current_line()}:{reader.get_current_column()} end-of-text"
+        print(pos)
 
     def valid_token_printer(self):
         """
