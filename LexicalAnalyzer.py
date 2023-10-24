@@ -138,9 +138,6 @@ class LexicalAnalyzer:
         elif (token in KEYWORDS or
               token in OPERATOR_CHARS):
             self.token_type = token
-        # if the token is a period, then the token type is end-of-text
-        elif (token == '.'):
-            self.token_type = "end-of-text"
         # if the token is not a keyword but contains a letter, and/or
         # digits, and/or underscore, then the token ID is of type "ID"
         elif all (char in LETTER_CHARS or \
