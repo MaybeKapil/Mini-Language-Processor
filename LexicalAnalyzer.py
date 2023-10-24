@@ -482,11 +482,11 @@ class LexicalAnalyzer:
                         self.valid_token_printer()
                     else:
                         self.invalid_token_print()
-                    # self.token_printer()
 
-            print()
-            print(f"Concluded lexical analysis on {user_input}")
-            print()
+            if (token_is_valid == True):
+                self.end_of_text_token_printer()
+
+            print(f"\nConcluded lexical analysis on {user_input}\n")
 
             reader.reset()
 
