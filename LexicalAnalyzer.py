@@ -422,11 +422,11 @@ class LexicalAnalyzer:
 
     def invalid_token_print(self):
         """
-        If the current character is invalid, then print
-        the token's position, and the error message along
+        If the current token contains an invalid character, then print
+        the character's position, and the error message along
         with the invalid character contained in the token.
         """
-        print(f"{self.get_token_position()} ----- Error: Invalid token '{self.get_current_token()}'")
+        print(f"{self.get_token_position()} ----- Invalid character '{self.get_current_token()}'")
 
     def validate_token(self, token):
         # If the token contains any of the invalid character(s), then it is considered invalid
