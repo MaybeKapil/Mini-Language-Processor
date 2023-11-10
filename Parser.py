@@ -239,11 +239,7 @@ class Parser:
                 self.read_file(user_input)
 
 if __name__ == "__main__":
-    # Create an instance of the LexicalAnalyzer class
-    lexi = LexicalAnalyzer()
-
     # Create an instance of the Parser class
     par = Parser()
 
-    lexi.next_token()
-    program()
+    par.prompt_user()
