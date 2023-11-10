@@ -141,18 +141,21 @@ class Parser:
             self.factor()
 
     def factor(self):
-        if (csym == "-" or csym == "not"):
-            next_token()
-        if (csym == "false" or "true" is "Num"):
-            literal()
-        elif (csym is ID):
-            next_token()
-        elif (csym == "("):
-            next_token()
-            expr()
-            match(")")
+        if (self.csym == "-" or self.csym == "not"):
+            # no match?
+            self.next()
+        if (self.csym == "true" or self.csym == "false" or self.csym_type == "NUM"):
+            self.literal()
+        elif (self.csym_type == TOKEN_TYPE_ID):
+            # no match?
+            self.next()
+        elif (self.csym == "("):
+            # no match?
+            self.next()
+            self.expr()
+            self.match(")")
         else:
-            expected({"false", "true", NUM, ID, "C"})
+            self.expected({"true", "false", "NUM", TOKEN_TYPE_ID, "("})
 
     def literal(self):
         assert csym == "true" or csym == "false" or csym == NUM
