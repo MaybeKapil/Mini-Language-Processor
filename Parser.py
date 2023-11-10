@@ -113,8 +113,11 @@ class Parser:
         self.body()
         self.match("end")
 
-    def print(self):
-        finish this
+    def print_sym(self):
+        assert self.csym == "print", \
+            f"Assertion failed: Expected 'print', but current symbol at position {lexi.get_token_position()} is '{self.csym}'"
+        self.match("print")
+        self.expr()
 
     def expr(self):
         simpleexpr()
