@@ -14,6 +14,9 @@ class Parser:
         self.csym = ""
         self.csym_type = ""
 
+    def set_csym(self, token):
+        self.csym = token
+
     def program(self):
         match("program")
 
