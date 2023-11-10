@@ -104,6 +104,15 @@ class Parser:
         self.match("then")
         self.body()
 
+    def iterative(self):
+        assert self.csym == "while", \
+            f"Assertion failed: Expected 'while', but current symbol at position {lexi.get_token_position()} is '{self.csym}'"
+        self.match("while")
+        self.expr()
+        self.match("do")
+        self.body()
+        self.match("end")
+
     def print(self):
         finish this
 
