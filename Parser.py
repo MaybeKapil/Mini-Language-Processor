@@ -90,10 +90,11 @@ class Parser:
                              but current symbol at position {lexi.get_token_position()} is {self.csym}.")
 
     def assignment(self):
-        assert csym is ID
-        match(ID)
-        match(":=")
-        expr()
+        assert self.csym_type == TOKEN_TYPE_ID, \
+            f"Assertion failed: Expected an identifier, but current symbol at position {lexi.get_token_position()} is '{self.csym}'"
+        self.match(TOKEN_TYPE_ID)
+        self.match(":=")
+        self.expr()
 
     def conditional(self):
         assert csym is "if"
