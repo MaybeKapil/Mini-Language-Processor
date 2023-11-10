@@ -175,7 +175,9 @@ class Parser:
         Gets user input for a file to read, opens the
         file, and makes sure it is syntactically correct.
 
-        No return value.
+        Returns type boolean
+            - true for valid syntax
+            - false for invalid syntax
         """
 
         global lexi, READER
@@ -188,25 +190,24 @@ class Parser:
         if (valid_file == 1):
             # Boolean variable for token validity
             # True = token is valid; false = token is invalid
-            token_is_valid = True
+            valid_syntax = True
 
             # Read the first token from the file.
             self.next()
             token = lexi.get_current_token()
             self.set_csym(token)
 
-            while(lexi.get_current_token() and token_is_valid):
+            while(lexi.get_current_token()):
                 try:
                     self.program()
                     self.body()
-                except TypeError as e:
-                    error_msg = str(e)
-                    print(error_msg)
-                    break
                 except AssertionError as e:
                     error_msg = str(e)
                     print(error_msg)
+                    valid_syntax = False
                     break
+
+            return valid_syntax
 
     def prompt_user(self):
         """
