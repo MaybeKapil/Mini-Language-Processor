@@ -158,11 +158,12 @@ class Parser:
             self.expected({"true", "false", "NUM", TOKEN_TYPE_ID, "("})
 
     def literal(self):
-        assert csym == "true" or csym == "false" or csym == NUM
-        if (csym is NUM):
-            next_token()
+        assert self.csym == "true" or self.csym == "false" or self.csym_type == "NUM", \
+            f"Assertion failed: Expected a boolean literal or an integer literal, but current symbol at position {lexi.get_token_position()} is '{self.csym}'"
+        if (self.csym_type == "NUM"):
+            self.next()
         else:
-            booleanLiteral()
+            self.boolean_literal()
 
     def boolean_literal(self):
         assert csym == "true" or csym == "false"
