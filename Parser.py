@@ -170,6 +170,44 @@ class Parser:
             f"Assertion failed: Expected a boolean literal, but current symbol at position {lexi.get_token_position()} is '{self.csym}'"
         self.next()
 
+    def read_file(self, user_input):
+        """
+        Gets user input for a file to read, opens the
+        file, and makes sure it is syntactically correct.
+
+        No return value.
+        """
+
+        global lexi, READER
+
+        # Try opening the file.
+        # If valid and file was successfully opened, value is 1.
+        # If invalid and file was not opened, value is 0.
+        valid_file = READER.open_file(user_input)
+
+        if (valid_file == 1):
+            # Boolean variable for token validity
+            # True = token is valid; false = token is invalid
+            token_is_valid = True
+
+            # Read the first token from the file.
+            self.next()
+            token = lexi.get_current_token()
+            self.set_csym(token)
+
+            while(lexi.get_current_token() and token_is_valid):
+                try:
+                    self.program()
+                    self.body()
+                except TypeError as e:
+                    error_msg = str(e)
+                    print(error_msg)
+                    break
+                except AssertionError as e:
+                    error_msg = str(e)
+                    print(error_msg)
+                    break
+
 if __name__ == "__main__":
     # Create an instance of the LexicalAnalyzer class
     lexi = LexicalAnalyzer()
