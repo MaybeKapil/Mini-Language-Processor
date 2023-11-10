@@ -120,11 +120,11 @@ class Parser:
         self.expr()
 
     def expr(self):
-        simpleexpr()
+        self.simple_expr()
         relational_operator = {"<", "=<", "=", "!=", ">=", ">"}
-        if csym in relational_operator:
-            next_token()
-            simpleexpr()
+        if self.csym in relational_operator:
+            self.next_token()
+            self.simple_expr()
 
     def simpleexpr(self):
         term()
