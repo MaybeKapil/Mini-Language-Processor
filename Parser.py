@@ -35,7 +35,7 @@ class Parser:
         self.next()
 
     def program(self):
-        match("program")
+        self.match("program")
 
     def body(self):
         if (csym ==  "bool" or csym == "int"):
