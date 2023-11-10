@@ -17,6 +17,12 @@ class Parser:
     def set_csym(self, token):
         self.csym = token
 
+    def next(self):
+        lexi.next_token()
+        token = lexi.get_current_token()
+        self.set_csym(token)
+        self.csym_type = lexi.get_token_type()
+
     def program(self):
         match("program")
 
