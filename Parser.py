@@ -38,9 +38,9 @@ class Parser:
         self.match("program")
 
     def body(self):
-        if (csym ==  "bool" or csym == "int"):
-            declarations()
-        statements()
+        if (self.csym ==  "bool" or self.csym == "int"):
+            self.declarations()
+        self.statements()
 
     def declarations(self):
         declaration()
