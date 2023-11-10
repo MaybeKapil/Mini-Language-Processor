@@ -52,16 +52,16 @@ class Parser:
             self.next()
 
     def declaration(self):
-        # assert csym in "bool" or "int"
+        assert self.csym == "bool" or self.csym == "int", \
+            f"Assertion failed: Expected 'bool' or 'int', but current symbol at position {lexi.get_token_position()} is '{self.csym}'"
+        self.next()
+        self.match(TOKEN_TYPE_ID)
 
-        next_token()
-        match(ID)
+        while (self.csym == ","):
+            self.next()
+            self.match(TOKEN_TYPE_ID)
 
-        while (csym == ","):
-            next_token()
-            match(ID)
-
-        match(";")
+        self.match(";")
 
     def statements(self):
         statement()
