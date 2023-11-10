@@ -1,9 +1,11 @@
 import LexicalAnalyzer
 
+lexi = LexicalAnalyzer.LexicalAnalyzer()
+READER = LexicalAnalyzer.reader
+
 set_of_symbols = {}
 
-# csym is current symbol -> should be the next token returned by the lexical analyzer
-# sym is symbol
+TOKEN_TYPE_ID = "ID"
 
 class Parser:
     def __init__ (self):
