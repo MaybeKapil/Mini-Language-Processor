@@ -97,11 +97,12 @@ class Parser:
         self.expr()
 
     def conditional(self):
-        assert csym is "if"
-        match("if")
-        expr()
-        match("then")
-        body()
+        assert self.csym == "if", \
+            f"Assertion failed: Expected 'if', but current symbol at position {lexi.get_token_position()} is '{self.csym}'"
+        self.match("if")
+        self.expr()
+        self.match("then")
+        self.body()
 
     def print(self):
         finish this
