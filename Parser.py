@@ -208,6 +208,36 @@ class Parser:
                     print(error_msg)
                     break
 
+    def prompt_user(self):
+        """
+        Prompts user for a file to parse.
+        Once user inputs valid file, the file is
+        parsed.
+
+        The user can quit at any time they receive a
+        prompt by typing 'quit' or 'exit' and
+        pressing enter.
+
+        Note: This is the same function from FileReader.py and
+        LexicalAnalyzer.py. By implementing it in this class
+        (Parser), it uses this classes read_file()
+        function rather than the read_file() function contained
+        in FileReader.py
+
+        i.e. This is overwriting the prompt_user() method
+        contained by the other programs
+
+        No return value
+        """
+        while(True):
+            user_input = input(">>> Enter a file name, or type 'quit' or 'exit' to exit: ")
+            if(user_input == "quit" or user_input == "exit"):
+                print("Program terminating...")
+                break
+            else:
+                # Process file for lexical analysis
+                self.read_file(user_input)
+
 if __name__ == "__main__":
     # Create an instance of the LexicalAnalyzer class
     lexi = LexicalAnalyzer()
