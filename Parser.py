@@ -134,7 +134,11 @@ class Parser:
             self.term()
 
     def term(self):
-        finish this
+        self.factor()
+        multiplicative_operator = {"*", "/", "mod", "and"}
+        while self.csym in multiplicative_operator:
+            self.next()
+            self.factor()
 
     def factor(self):
         if (csym == "-" or csym == "not"):
