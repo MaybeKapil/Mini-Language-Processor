@@ -43,10 +43,13 @@ class Parser:
         self.statements()
 
     def declarations(self):
-        declaration()
+        self.declaration()
 
-        while (csym in ["bool", "int"]):
-            declarations()
+        while (self.csym in ["bool", "int"]):
+            self.declarations()
+
+            # think i need this
+            self.next()
 
     def declaration(self):
         # assert csym in "bool" or "int"
