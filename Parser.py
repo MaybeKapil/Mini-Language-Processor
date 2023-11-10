@@ -71,16 +71,16 @@ class Parser:
         self.statement()
 
     def statement(self):
-        if (csym == ID):
-            assignment()
-        elif (csym == "if"):
-            conditional()
-        elif (csym == "while"):
-            iterative()
-        elif (csym == "print"):
-            print_s()
+        if (self.csym_type == TOKEN_TYPE_ID):
+            self.assignment()
+        elif (self.csym == "if"):
+            self.conditional()
+        elif (self.csym == "while"):
+            self.iterative()
+        elif (self.csym == "print"):
+            self.print_sym()
         else:
-            expected({ID, "if", "while", "print"})
+            self.expected({TOKEN_TYPE_ID, "if", "while", "print"})
 
     def expected(self, set_of_symbols):
         if (csym not in set_of_symbols):
