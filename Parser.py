@@ -23,15 +23,19 @@ class Parser:
         self.set_csym(token)
         self.csym_type = lexi.get_token_type()
 
+    def match(self, sym):
+        # if (self.csym == sym or self.csym_type == sym):
+        #     self.next()
+        # else:
+        #     # ERROR: At this position see self.csym but expect sym
+        #     raise TypeError("Expected {sym}, got {self.csym} at position.")
+
+        assert self.csym == sym or self.csym_type == sym, \
+            f"Assertion failed: Expected '{sym}' but current symbol at position {lexi.get_token_position()} is '{self.csym}'"
+        self.next()
+
     def program(self):
         match("program")
-
-    def match(self, sym):
-        if csym == sym:
-            next_token()
-        else:
-            # ERROR: At this position see csym but expect sym
-            raise TypeError("Expected {sym}, got {csym}.")
 
     def body(self):
         if (csym ==  "bool" or csym == "int"):
