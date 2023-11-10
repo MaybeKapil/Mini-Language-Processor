@@ -126,12 +126,12 @@ class Parser:
             self.next_token()
             self.simple_expr()
 
-    def simpleexpr(self):
-        term()
+    def simple_expr(self):
+        self.term()
         additive_operator = {"+", "-", "or"}
-        while csym in additive_operator:
-            next_token()
-            term()
+        while self.csym in additive_operator:
+            self.next()
+            self.term()
 
     def term(self):
         finish this
