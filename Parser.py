@@ -166,8 +166,9 @@ class Parser:
             self.boolean_literal()
 
     def boolean_literal(self):
-        assert csym == "true" or csym == "false"
-        next_token()
+        assert self.csym == "true" or self.csym == "false", \
+            f"Assertion failed: Expected a boolean literal, but current symbol at position {lexi.get_token_position()} is '{self.csym}'"
+        self.next()
 
 if __name__ == "__main__":
     # Create an instance of the LexicalAnalyzer class
