@@ -185,7 +185,7 @@ class LexicalAnalyzer:
         # if the current character is in the set of whitespace character,
         # then the current character is a whitespace and will be skipped
         # at the end, current_char will not be a white_space, resulting in the end of the while loop
-        while (current_char in WHITE_SPACE_CHARS):
+        while (current_char and current_char in WHITE_SPACE_CHARS):
             # skip the current (whitespace) character by getting the next character
             reader.next_char()
 
