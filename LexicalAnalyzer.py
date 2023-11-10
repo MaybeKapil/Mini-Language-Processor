@@ -47,7 +47,7 @@ class LexicalAnalyzer:
         # Defines a variable that will be used to store the type of the current token.
         self.token_type = ""
 
-        # Defines a variable that will be used to store the current token.
+        # Defines a variable that will be used to store the current token position.
         self.token_pos = ""
 
     def get_current_token(self):
