@@ -83,9 +83,11 @@ class Parser:
             self.expected({TOKEN_TYPE_ID, "if", "while", "print"})
 
     def expected(self, set_of_symbols):
-        if (csym not in set_of_symbols):
-            # ERROR: At this position I expected to see set_of_symbols, but I see csym
-            raise TypeError("Expected one of the following: {set_of_symbols}, got csym.")
+        # if (self.csym not in set_of_symbols):
+
+        # ERROR: At this position I expected to see set_of_symbols, but I see self.csym
+        raise AssertionError(f"Expected one of the following: {set_of_symbols}, \
+                             but current symbol at position {lexi.get_token_position()} is {self.csym}.")
 
     def assignment(self):
         assert csym is ID
