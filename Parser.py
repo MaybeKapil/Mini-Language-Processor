@@ -64,12 +64,11 @@ class Parser:
         self.match(";")
 
     def statements(self):
-        statement()
+        self.statement()
 
-        while (csym == ";"):
-            next_token()
-
-        statement()
+        while (self.csym == ";"):
+            self.next()
+        self.statement()
 
     def statement(self):
         if (csym == ID):
