@@ -12,6 +12,7 @@ class Parser:
         # Defines a variable that will be used to store the next token
         # returned by the lexical analyzer
         self.csym = ""
+        self.csym_type = ""
 
     def program(self):
         match("program")
