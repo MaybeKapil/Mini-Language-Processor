@@ -15,8 +15,6 @@ WHITE_SPACE_CHARS = string.whitespace
 
 # special_characters = '!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~}'
 
-INVALID_CHARS = "!\"#$%&'?@[\]^`{|}~}'"
-
 # Defines a constant variable that stores all uppercase and
 # lowercase letter characters of the alphabet (a-z and A-Z).
 LETTER_CHARS = string.ascii_letters
@@ -49,6 +47,8 @@ class LexicalAnalyzer:
 
         # Defines a variable that will be used to store the current token position.
         self.token_pos = ""
+
+        self.token_is_valid = True
 
     def get_current_token(self):
         """
@@ -106,7 +106,6 @@ class LexicalAnalyzer:
         Returns:
             The current token type.
         """
-
         return self.token_type
 
     def set_token_type(self):
@@ -150,6 +149,15 @@ class LexicalAnalyzer:
         else:
             self.token_type = token
 
+    def set_token_type_eot(self):
+        """
+        Specialized function for setting the token type to 'end-of-text'
+        once a file has been fully read and all the tokens are valid.
+
+        Made separate since it serves a single purpose.
+        """
+        self.token_type = "end-of-text"
+
     def get_token_value(self):
         """
         Get the current token value.
@@ -167,6 +175,21 @@ class LexicalAnalyzer:
             return self.get_current_token()
 
         return None
+
+    def set_token_validity(self, valid):
+        """
+        Set the validity of the current token.
+
+        Set to true if token is valid.
+        Set to false if token is invalid.
+        """
+        self.token_is_valid = valid
+
+    def get_token_validity(self):
+        """
+        Get the validity of the current token.
+        """
+        return self.token_is_valid
 
     def skip_white_spaces(self):
         """
@@ -192,9 +215,30 @@ class LexicalAnalyzer:
             # store the new current character to be used for reevaluation of the while conditional statement
             current_char = reader.get_current_char()
 
+    def next(self):
+        """
+        Process the next token.
+
+        Processing the next token includes getting the next token and
+        validating the token.
+
+        No return value.
+        """
+
+        self.next_token()
+        token = self.get_current_token()
+        valid = self.validate_token(token)
+        self.set_token_validity(valid)
+
     def next_token(self):
         """
-        Skips whitespaces, stores the to-be generated token's starting position
+        Gets the next token from the file.
+
+        Skips whitespaces, stores the to-be generated token's starting position,
+        builds the token, skips comments, and creates an end-of-text token if the end of text
+        is reached.
+
+        An empty token "" is only generated if end of text is reached and EOT is created.
 
         No return value.
         """
@@ -203,24 +247,45 @@ class LexicalAnalyzer:
             DIGIT_CHARS, OPERATOR_CHARS, PUNCTUATION_CHARS, \
                 reader
 
-        # local token variable to store the token while the token is being "built"
-        token = ""
-
-        # skip consecutive whitespaces until you reach a non-whitespace character
-        self.skip_white_spaces()
-
-        # after all the white spaces are skipped (if there were any), you end up at a non-whitespace character
-        # and therefore need to mark this as the beginning of the token
-        self.set_token_position(reader.position())
-
-        token = self.build_token()
-
-        if (token == "//"):
-            # clear the current_token to get rid of the double slash
-            self.skip_comment()
+        while (reader.get_current_char()):
+            # local token variable to store the token while the token is being "built"
             token = ""
 
-        self.set_current_token(token)
+            # skip consecutive whitespaces until you reach a non-whitespace character
+            self.skip_white_spaces()
+
+            # after all the white spaces are skipped (if there were any), you end up at a non-whitespace character
+            # and therefore need to mark this as the beginning of the token
+            self.set_token_position(reader.position())
+
+            token = self.build_token()
+
+            # the start of a comment was found
+            if (token == "//"):
+                # clear the current_token to get rid of the double slash
+                self.skip_comment()
+                # check if end of file is reached after skipping the comment
+                if not reader.get_current_char():
+                    self.create_eot()
+                    break
+            # no more tokens can be built, so end of file has been reached
+            elif (token == ""):
+                self.create_eot()
+                break
+            else:
+                self.set_current_token(token)
+                break
+
+    def create_eot(self):
+        """
+        Create end-of-text token.
+
+        No return value
+        """
+
+        self.set_current_token("")
+        self.set_token_position(reader.position())
+        self.set_token_type_eot()
 
     def build_token(self):
         """
@@ -268,6 +333,9 @@ class LexicalAnalyzer:
         Return:
             The operator or comment token that was built.
         """
+
+        global reader
+
         # store the current character
         current_char = reader.get_current_char()
 
@@ -317,6 +385,8 @@ class LexicalAnalyzer:
             The id or keyword token that was built.
         """
 
+        global reader
+
         # store the current character
         current_char = reader.get_current_char()
 
@@ -359,6 +429,8 @@ class LexicalAnalyzer:
             The number token that was built.
         """
 
+        global reader
+
         # store the current character
         current_char = reader.get_current_char()
 
@@ -391,6 +463,8 @@ class LexicalAnalyzer:
         up to and including the line feed character ('\n').
         """
 
+        global reader
+
         # While the file still contains unread characters,
         # keep getting the next character until you reach a line feed
         # and then get the next character so that you are on the next line
@@ -398,44 +472,91 @@ class LexicalAnalyzer:
             reader.next_char()
         reader.next_char()
 
-    def end_of_text_token_printer(self):
-        # Concatenate the current line and column integers with a colon separator.
-        pos = f"{reader.get_current_line()}:{reader.get_current_column()} end-of-text"
-        print(pos)
-
-    def valid_token_printer(self):
+    def valid_token_msg(self):
         """
 
-        If the current token is valid and has a value, print the current
+        If the current token is valid and has a value, return a string containing the current
         token's position, type, and value.
 
-        If the current token does not have a value, print
+        If the current token does not have a value, return a string containing
         the current token's position, and type.
+
+        Return:
+            String containing valid token info
+        """
+
+        if (self.get_token_value() is not None):
+            return(f"{self.get_token_position()} '{self.get_token_type()}' {self.get_token_value()}")
+        else:
+            return(f"{self.get_token_position()} '{self.get_token_type()}'")
+
+    def invalid_token_msg(self):
+        """
+        If the current token contains an invalid character, then return a string containing
+        the character's position, and the error message along
+        with the invalid character contained in the token.
+
+        Return:
+            String containing invalid character info
+
+        """
+        return (f"{self.get_token_position()} ----- Invalid character '{self.get_current_token()}'")
+
+    def print_token(self):
+        if (self.token_is_valid):
+            self.valid_token_msg()
+        else:
+            self.invalid_token_msg()
+
+    def validate_token(self, token):
+        """
+        Returns if the token passed is valid or not.
+
+        If the token contains any of the invalid character(s), then it is considered invalid.
+        Underscore or colon or exclamation point by itself is not a valid token.
+        Underscore can only appear in ID, which has to start with a letter.
+
+        If token is invalid, return False.
+        Otherwise, if token is not empty, set token type and return True.
+        Otherwise, if token is empty (only for EOT token), return True without setting token type
+        since generation of EOT token automatically sets type.
+
+        """
+        INVALID_CHARS = "!\"#$%&'?@[\]^`{|}~}'"
+
+        # If the token is not an empty string and it contains an invalid character
+        # then return False to indicate that the token is invalid
+        if (token and(token in INVALID_CHARS or token == '_' or token == '!')):
+            return False
+        # Otherwise, if the token is not empty (but doesn't contain an invalid character),
+        # set the token type and return True to indicate that it was validated
+        elif (token):
+            self.set_token_type()
+            return True
+        # Otherwise, if the token is empty, then return true but don't set the type
+        # This is meant to validate the end-of-text token obtained by using next_token()
+        # The program already ignores whitespaces and comments so the only time when
+        # the token can be "" is if it's an end-of-text token
+        else:
+            return True
+
+    def reset(self):
+        """
+        Restore instance variables of Lexical Analyzer to default state.
 
         No return value.
         """
+        global reader
 
-        if (self.get_token_value() != None):
-            print(f"{self.get_token_position()} '{self.get_token_type()}' {self.get_token_value()}")
-        else:
-            print(f"{self.get_token_position()} '{self.get_token_type()}'")
+        reader.reset()
 
-    def invalid_token_print(self):
-        """
-        If the current token contains an invalid character, then print
-        the character's position, and the error message along
-        with the invalid character contained in the token.
-        """
-        print(f"{self.get_token_position()} ----- Invalid character '{self.get_current_token()}'")
+        self.current_token = ""
 
-    def validate_token(self, token):
-        # If the token contains any of the invalid character(s), then it is considered invalid
-        # Underscore or colon or exclamation point by itself is not a valid token
-        # Underscore can only appear in ID, which has to start with a letter
-        # if (token in INVALID_CHARS or token == '_' or token == ):
-        if (token in INVALID_CHARS or token == '_' or token == '!'):
-            return False
-        return True
+        self.token_type = ""
+
+        self.token_pos = ""
+
+        self.token_is_valid = True
 
     def read_file(self, user_input):
         """
@@ -459,9 +580,6 @@ class LexicalAnalyzer:
         valid_file = reader.open_file(user_input)
 
         if (valid_file == 1):
-            # Boolean variable for token validity
-            # True = token is valid; false = token is invalid
-            token_is_valid = True
 
             # Read the first character from the file.
             reader.next_char()
@@ -471,26 +589,13 @@ class LexicalAnalyzer:
             # which is obtained by using get_current_char(), is empty.
             # An empty value indicates that End of File has been reached.
             # If a non-valid token is reached, terminate lexical analyzer.
-            while(reader.get_current_char() and token_is_valid):
-                self.next_token()
-                token = self.get_current_token()
-
-                if (token != ""):
-                    token_is_valid = self.validate_token(token)
-                    if (token_is_valid == True):
-                        self.set_token_type()
-                        self.valid_token_printer()
-                    else:
-                        self.invalid_token_print()
-
-            # print 'end-of-text' token if, once all the file has been tokenized,
-            # all of the characters in the file were valid.
-            if (token_is_valid == True):
-                self.end_of_text_token_printer()
+            while(reader.get_current_char() and self.token_is_valid):
+                self.next()
+                self.print_token()
 
             print(f"\nConcluded lexical analysis on {user_input}\n")
 
-            reader.reset()
+            self.reset()
 
     def prompt_user(self):
         """
