@@ -79,7 +79,6 @@ class Parser:
         Raises:
         - AssertionError: If the current symbol does not match the expected symbol.
         """
-        # print(f"line 27: {self.csym} and {self.csym_type}")
         assert self.csym == sym or self.csym_type == sym, \
             f"{lexiAnalyzer.get_token_position()}:>>>>> Bad symbol '{self.csym}':  expected '{sym}'"
         self.next()
@@ -97,7 +96,7 @@ class Parser:
         If the current symbol is 'bool' or 'int', parse variable declarations.
         Parse statements in the block.
         """
-        if (self.csym ==  "bool" or self.csym == "int"):
+        if (self.csym in ["bool", "int"]):
             self.declarations()
         self.statements()
 
@@ -123,7 +122,7 @@ class Parser:
         Use a loop to handle consecutive identifiers separated by ','.
         Match the ';' at the end of the declaration.
         """
-        assert self.csym == "bool" or self.csym == "int", \
+        assert self.csym in ["bool", "int"], \
             f"{lexiAnalyzer.get_token_position()}:>>>>> Bad symbol '{self.csym}':  expected 'bool' or 'int'"
         self.next()
         self.match(ID_TOKEN_TYPE)
@@ -306,7 +305,7 @@ class Parser:
         """
         if (self.csym == "-" or self.csym == "not"):
             self.next()
-        if (self.csym == "true" or self.csym == "false" or self.csym_type == "NUM"):
+        if (self.csym in ["true", "false"] or self.csym_type == "NUM"):
             self.literal()
         elif (self.csym_type == ID_TOKEN_TYPE):
             self.next()
@@ -325,7 +324,7 @@ class Parser:
         If the symbol is an integer, move to the next token.
         Otherwise, call the boolean_literal method.
         """
-        assert self.csym == "true" or self.csym == "false" or self.csym_type == "NUM", \
+        assert self.csym in ["true", "false"] or self.csym_type == "NUM", \
             f"{lexiAnalyzer.get_token_position()}:>>>>> Bad symbol '{self.csym}':  expected 'true', 'false', or an integer"
         if (self.csym_type == "NUM"):
             self.next()
@@ -338,7 +337,7 @@ class Parser:
         If not, raise an assertion error.
         Then, move to the next token.
         """
-        assert self.csym == "true" or self.csym == "false", \
+        assert self.csym in ["true", "false"], \
             f"{lexiAnalyzer.get_token_position()}:>>>>> Bad symbol '{self.csym}':  expected a 'true' or 'false'"
         self.next()
 
@@ -425,7 +424,7 @@ class Parser:
         """
         while(True):
             user_input = input(">>> Enter a file name, or type 'quit' or 'exit' to exit: ")
-            if(user_input == "quit" or user_input == "exit"):
+            if(user_input in ["quit", "exit"]):
                 print("Program terminating...")
                 break
             else:
