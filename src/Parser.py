@@ -14,6 +14,8 @@ class Parser:
         # Stores the token type of the next token
         self.csym_type = ""
 
+        self.follow = {"."}
+
     def set_csym(self, token):
         """
         Set the current symbol (csym) to the given token.
@@ -66,8 +68,10 @@ class Parser:
         self.program()
         self.match(ID_TOKEN_TYPE)
         self.match(":")
-        self.body()
+        self.body(self.follow)
+        #print("test1: " + self.csym)
         self.match(".")
+        #print("test1")
 
     def match(self, sym):
         """
@@ -79,7 +83,7 @@ class Parser:
         Raises:
         - AssertionError: If the current symbol does not match the expected symbol.
         """
-        assert self.csym == sym or self.csym_type == sym, \
+        assert (self.csym and self.csym in sym) or (self.csym_type == sym), \
             f"{lexiAnalyzer.get_token_position()}:>>>>> Bad symbol '{self.csym}':  expected '{sym}'"
         self.next()
 
@@ -89,7 +93,7 @@ class Parser:
         """
         self.match("program")
 
-    def body(self):
+    def body(self, follow):
         """
         Parse the body.
 
@@ -98,8 +102,9 @@ class Parser:
         """
         if (self.csym in ["bool", "int"]):
             self.declarations()
-        self.statements()
+        self.statements(follow)
 
+    # don't need
     def declarations(self):
         """
         Parse a sequence of variable declarations.
@@ -110,7 +115,7 @@ class Parser:
         self.declaration()
 
         while (self.csym in ["bool", "int"]):
-            self.declarations()
+            self.declaration()
 
     def declaration(self):
         """
@@ -133,20 +138,20 @@ class Parser:
 
         self.match(";")
 
-    def statements(self):
+    def statements(self, follow):
         """
         Parse a sequence of statements.
 
         Parse the first statement.
         Use a loop to handle consecutive statements separated by ';'.
         """
-        self.statement()
+        self.statement(follow.union({";"}))
 
         while (self.csym == ";"):
             self.next()
-            self.statements()
+            self.statement(follow.union({";"}))
 
-    def statement(self):
+    def statement(self, follow):
         """
         Parse a statement.
 
@@ -158,13 +163,13 @@ class Parser:
         """
         if (self.csym_type == ID_TOKEN_TYPE):
 
-            self.assignment()
+            self.assignment(follow)
         elif (self.csym == "if"):
-            self.conditional()
+            self.conditional(follow)
         elif (self.csym == "while"):
-            self.iterative()
+            self.iterative(follow)
         elif (self.csym == "print"):
-            self.print_sym()
+            self.print_sym(follow)
         else:
             sos = {ID_TOKEN_TYPE, "if", "while", "print"}
             self.expected(sos)
@@ -183,7 +188,7 @@ class Parser:
             f"{lexiAnalyzer.get_token_position()}:>>>>> Bad symbol '{self.csym}':  expected one of the following {set_of_symbols}"
             )
 
-    def assignment(self):
+    def assignment(self, follow):
         """
         Parse an assignment statement.
 
@@ -196,9 +201,9 @@ class Parser:
             f"{lexiAnalyzer.get_token_position()}:>>>>> Bad symbol '{self.csym}':  expected an identifier"
         self.match(ID_TOKEN_TYPE)
         self.match(":=")
-        self.expr()
+        self.expr(follow)
 
-    def conditional(self):
+    def conditional(self, follow):
         """
         Parse a conditional statement with 'if', indicating an if condition.
 
@@ -213,15 +218,15 @@ class Parser:
         assert self.csym == "if", \
             f"{lexiAnalyzer.get_token_position()}:>>>>> Bad symbol '{self.csym}':  expected 'if'"
         self.match("if")
-        self.expr()
+        self.expr(follow)
         self.match("then")
-        self.body()
+        self.body(follow)
         if (self.csym == "else"):
             self.match("else")
-            self.body()
+            self.body(follow)
         self.match("end")
 
-    def iterative(self):
+    def iterative(self, follow):
         """
         Parse an iterative statement with 'while', indicating a while loop.
 
@@ -235,12 +240,12 @@ class Parser:
         assert self.csym == "while", \
             f"{lexiAnalyzer.get_token_position()}:>>>>> Bad symbol '{self.csym}':  expected 'while'"
         self.match("while")
-        self.expr()
+        self.expr(follow)
         self.match("do")
-        self.body()
+        self.body(follow)
         self.match("end")
 
-    def print_sym(self):
+    def print_sym(self, follow):
         """
         Parse a 'print' statement.
 
@@ -251,9 +256,9 @@ class Parser:
         assert self.csym == "print", \
             f"{lexiAnalyzer.get_token_position()}:>>>>> Bad symbol '{self.csym}':  expected 'print'"
         self.match("print")
-        self.expr()
+        self.expr(follow)
 
-    def expr(self):
+    def expr(self, follow):
         """
         Parse an expression.
 
@@ -261,39 +266,39 @@ class Parser:
         If the current symbol is a relational operator ('<', '=<', '=', '!=', '>=', '>'),
         move to the next token and parse the next simple expression.
         """
-        self.simple_expr()
+        self.simple_expr(follow.union({"<", "=<", "=", "!=", ">=", ">"}))
         relational_operator = {"<", "=<", "=", "!=", ">=", ">"}
         if self.csym in relational_operator:
             self.next()
-            self.simple_expr()
+            self.simple_expr(follow.union({"<", "=<", "=", "!=", ">=", ">"}))
 
-    def simple_expr(self):
+    def simple_expr(self, follow):
         """
         Parse a simple expression in the overall expression.
 
         Call the term method to parse the first term.
         Use a loop to handle consecutive terms separated by additive operators ('+', '-', 'or').
         """
-        self.term()
+        self.term(follow.union({"+", "-", "or"}))
         additive_operator = {"+", "-", "or"}
         while self.csym in additive_operator:
             self.next()
-            self.term()
+            self.term(follow.union({"+", "-", "or"}))
 
-    def term(self):
+    def term(self, follow):
         """
         Parse a term in the simple expression.
 
         Call the factor method to parse the first factor.
         Use a loop to handle consecutive factors separated by multiplicative operators ('*', '/', 'mod', 'and').
         """
-        self.factor()
+        self.factor(follow.union({"*", "/", "mod", "and"}))
         multiplicative_operator = {"*", "/", "mod", "and"}
         while self.csym in multiplicative_operator:
             self.next()
-            self.factor()
+            self.factor(follow.union({"*", "/", "mod", "and"}))
 
-    def factor(self):
+    def factor(self, follow):
         """
         Parse a factor in the expression.
 
@@ -311,10 +316,10 @@ class Parser:
             self.next()
         elif (self.csym == "("):
             self.next()
-            self.expr()
-            self.match(")")
+            self.expr(follow)
+            self.match(follow.union({")"}))
         else:
-            sos = {ID_TOKEN_TYPE, "true", "false", "NUM", "("}
+            sos = {ID_TOKEN_TYPE, "true", "false", "NUM", "(", "-", "not"}
             self.expected(sos)
 
     def literal(self):
