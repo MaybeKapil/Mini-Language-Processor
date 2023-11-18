@@ -4,45 +4,29 @@ import os.path
 # Import the 'stderr' attribute from the 'sys' module to handle error output.
 import sys
 
-# Global Variables
-
-# The current character being processed.
-current_char = ''
-
-# The current character's line number.
-current_line = 1
-
-# The current character's column number.
-current_column = 0
-
-# The file to be read.
-input_file = None
-
 class FileReader:
-    # def __init__(self):
-    #     self.current_char = ''
-    #     self.current_line = 1
-    #     self.current_column = 0
-    #     self.input_file = None
+    def __init__(self):
+        self.current_char = ''
+        self.current_line = 1
+        self.current_column = 0
+        self.input_file = None
 
     # Reads the next character from the input file and updates character and position values accordingly.
     # Does not return a value.
     def next_char(self):
-        # Ensures reference to global variables, not variables of local scope.
-        global current_char, current_line, current_column, input_file
 
         # Reads one character from the file.
-        current_char = input_file.read(1)
+        self.current_char = self.input_file.read(1)
 
         # File is assumed to contain Unix-style line ending, not CRLF.
         # In ASCII and Unicode character encodings, LF is represented as '\n'.
         # Check if you reached a Line-Feed, '\n'
-        if (current_char == "\n"):
+        if (self.current_char == "\n"):
             # Increment the current_line count.
-            current_line += 1
+            self.current_line += 1
 
             # Reset the current_column count to 0 for a new line.
-            current_column = 0
+            self.current_column = 0
 
             # # When you reach a Line-Feed, '\n' , consider that as an empty character
             # current_char = ''
@@ -50,38 +34,34 @@ class FileReader:
             # If you just read a character that is not a Line-Feed, then you are on the same line
             # so increment the column value without incrementing the line value
             # and the character value will be the same as what was read
-            current_column += 1
+            self.current_column += 1
 
     # Returns a string containing the character that was just read.
     def get_current_char(self):
-        global current_char
-        return current_char
+        return self.current_char
 
     # Returns an integer representing the line number of the most recently read character.
     def get_current_line(self):
-        global current_line
-        return current_line
+        return self.current_line
 
     # Returns an integer representing the column number of the most recently read character.
     def get_current_column(self):
-        global current_column
-        return current_column
+        return self.current_column
 
     # Returns a string representation of the current position in the format "line:column".
     def position(self):
         # Concatenate the current line and column integers with a colon separator.
-        pos = f"{current_line}:{current_column}"
+        pos = f"{self.current_line}:{self.current_column}"
         return pos
 
     # Opens the file specified by the 'some_file' argument in read-only mode ('r').
     # Returns 1 if file was successfully opened, otherwise returns 0.
     # Used this webpage for help on how to error handle: https://www.topbug.net/blog/2020/10/03/catching-filenotfounderror-watch-out/
     def open_file(self, some_file):
-        global input_file
 
         # Try to open the file in read-only mode
         try:
-            input_file = open(some_file, 'r')
+            self.input_file = open(some_file, 'r')
             # If file opened successfully, return 1.
             return 1
         # If file not found, report error.
@@ -101,20 +81,20 @@ class FileReader:
         global current_char, current_line, current_column, input_file
 
         # The current character being processed.
-        current_char = ''
+        self.current_char = ''
 
         # The current character's line number.
-        current_line = 1
+        self.current_line = 1
 
         # The current character's column number.
-        current_column = 0
+        self.current_column = 0
 
         # The file to be read.
 
         # Close previously opened file
-        input_file.close
+        self.input_file.close()
 
-        input_file = None
+        self.input_file = None
 
     # Gets user input for a file to read, opens the file, and reads the file character by character.
     # Printing out the position of each character followed by the character.
