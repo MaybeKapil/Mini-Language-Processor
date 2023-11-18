@@ -7,6 +7,8 @@
 #### Run using the command
 `python Parser.py`
 
+# VERSION WITH ADDITIONAL ERROR REPORTING
+
 ## Program Usage:
 This program will reads files character by character and lexically analyze them.
 1. When the program starts, it will prompt you for a file name. Enter the file name of a text file which you want the program to read and display.
